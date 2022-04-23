@@ -17,14 +17,14 @@ return new class extends Migration
             $table->string('user_id', 255);
             $table->bigInteger('status_id')->unsigned();
             $table->string('name', 100);
-            $table->string('nip', 50);
-            $table->string('gender');
-            $table->string('birthday_at');
-            $table->date('birthday');
-            $table->string('address');
-            $table->string('description');
-            $table->string('phone', 20);
-            $table->string('photo');
+            $table->string('nip', 50)->nullable();
+            $table->string('gender')->nullable();
+            $table->string('birthday_at')->nullable();
+            $table->date('birthday')->nullable();
+            $table->string('address')->nullable();
+            $table->string('description')->nullable();
+            $table->string('phone', 20)->nullable();
+            $table->string('photo')->nullable();
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

@@ -20,6 +20,8 @@ return new class extends Migration
             $table->string('description');
             $table->string('photo');
             $table->timestamps();
+
+            $table->foreign('unit_name_structure_id')->references('id')->on('unit_name_structures')->onDelete('cascade');
         });
     }
 

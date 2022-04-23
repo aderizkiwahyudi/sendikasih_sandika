@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('user_id', 255);
             $table->integer('step');
             $table->integer('result');
-            $table->timestamp('verify_at');
+            $table->timestamp('verify_at')->nullable();
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

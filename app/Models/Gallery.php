@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Gallery extends Model
 {
     use HasFactory;
+
+    public function photos()
+    {
+        return $this->hasMany(GalleryPhoto::class);
+    }
 }

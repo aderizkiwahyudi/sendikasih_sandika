@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\News;
 use Illuminate\Http\Request;
 
-class indexController extends Controller
+class welcomeController extends Controller
 {
     /**
      * Handle the incoming request.
@@ -14,6 +15,7 @@ class indexController extends Controller
      */
     public function __invoke(Request $request)
     {
-        return view('welcome');
+        $news = News::where('show', 1)->latest()->limit(4)->get();
+        return view('welcome', compact('news'));
     }
 }

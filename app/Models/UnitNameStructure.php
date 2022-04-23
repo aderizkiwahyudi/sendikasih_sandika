@@ -10,4 +10,8 @@ class UnitNameStructure extends Model
     use HasFactory;
 
     protected $table = 'unit_name_structures';
+
+    public function list(){
+        return $this->hasMany(UnitStructureItem::class);
+    }
 }

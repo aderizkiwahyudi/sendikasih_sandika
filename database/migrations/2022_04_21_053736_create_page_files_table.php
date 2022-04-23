@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('description');
             $table->string('slug');
             $table->string('url');
+            $table->string('year', 5)->nullable();
             $table->string('category');
             $table->timestamps();
 

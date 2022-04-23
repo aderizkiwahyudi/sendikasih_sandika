@@ -16,6 +16,7 @@ class classSeeder extends Seeder
     public function run()
     {
         DB::table('class')->insert([
+            ['unit_id' => 1, 'name' => 'Belum memiliki kelas', 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
             ['unit_id' => 2, 'name' => '1', 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
             ['unit_id' => 2, 'name' => '2', 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
             ['unit_id' => 2, 'name' => '3', 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
