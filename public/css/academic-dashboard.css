@@ -1,0 +1,97 @@
+body {
+    background: #f9f9f9;
+}
+header {
+    background: #0052D9;
+}
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.header .logo a {
+    color: #fff;
+}
+.header .nav-link {
+    color: #fff;
+}
+main {
+    padding: 20px 0;
+}
+.profile {
+    padding: 20px;
+    background: #fff;
+}
+.profile .photo {
+    width: 80px;
+    height: 80px;
+    margin-right: 20px;
+}
+.profile .photo img {
+    border-radius: 50%;
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+}
+.profile .info p {
+    font-size: 17px;
+    font-weight: 600;
+    margin: 0;
+}
+.breadcrumb {
+    font-size: 14px;
+}
+.menus {
+    background: #fff;
+    margin: 20px 0;
+}
+.menus ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.menus ul li {
+    list-style: none;
+    padding: 10px 20px;
+    margin: 0;
+    transition: all 0.3s;
+}
+.menus ul li a {
+    color: #000;
+}
+.menus ul li:hover {
+    background: #0052D9;
+}
+.menus ul li:hover a {
+    color: #fff;
+}
+.menus ul li.active {
+    background: #0052D9;
+}
+.menus ul li.active a {
+    color: #fff;
+}
+.content-body {
+    margin: 20px 0;
+}
+.content-body .icon-active {
+    font-size: 40pt;
+}
+.content-body .box {
+    padding: 20px;
+    background: #fff;
+}
+.content-body .box .headline {
+    font-size: 20px;
+    margin: 0;
+    font-weight: 600;
+}
+
+@media screen and (max-width:756px) {
+    .mobile-none {
+        display: none;
+    }
+    .box {
+        margin-bottom: 20px;
+    }
+}

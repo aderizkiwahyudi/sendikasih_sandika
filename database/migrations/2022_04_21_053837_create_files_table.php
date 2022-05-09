@@ -15,8 +15,8 @@ return new class extends Migration
     {
         Schema::create('files', function (Blueprint $table) {
             $table->id();
-            $table->string('page_file_id', 255);
-            $table->string('url');
+            $table->bigInteger('page_file_id')->unsigned();
+            $table->text('url');
             $table->timestamps();
 
             $table->foreign('page_file_id')->references('id')->on('page_files')->onDelete('cascade');

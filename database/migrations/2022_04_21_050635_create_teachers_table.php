@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('teachers', function (Blueprint $table) {
             $table->string('user_id', 255);
             $table->bigInteger('status_id')->unsigned();
+            $table->bigInteger('year_id')->unsigned();
             $table->string('name', 100);
             $table->string('nip', 50)->nullable();
             $table->string('gender')->nullable();
@@ -24,11 +25,12 @@ return new class extends Migration
             $table->string('address')->nullable();
             $table->string('description')->nullable();
             $table->string('phone', 20)->nullable();
-            $table->string('photo')->nullable();
+            $table->text('photo')->nullable();
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('status_id')->references('id')->on('status')->onDelete('cascade');
+            $table->foreign('year_id')->references('id')->on('years')->onDelete('cascade');
         });
     }
 

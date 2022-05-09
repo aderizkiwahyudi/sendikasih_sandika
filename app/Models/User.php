@@ -59,6 +59,17 @@ class User extends Authenticatable
 
     public function recruitment()
     {
-        return $this->hasOne(Staff::class);
+        return $this->hasOne(Recruitment::class);
     }
+
+    public function unit()
+    {
+        return $this->belongsTo(Unit::class);
+    }
+
+    public function role()
+    {
+        return $this->belongsTo(Role::class);
+    }
+
 }

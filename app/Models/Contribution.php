@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Contribution extends Model
 {
     use HasFactory;
+
+    public function item()
+    {
+        return $this->hasMany(ContributionItem::class);
+    }
 }

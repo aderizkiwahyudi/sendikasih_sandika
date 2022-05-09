@@ -13,8 +13,8 @@ class newsController extends Controller
         $news = News::where('show', 1)->latest()->paginate(12);
         
         if($slug){
-            $category = Category::where('slug', $slug)->firstOrFail();
-            $news = News::where('category_id', $category->id)->latest()->paginate(12);
+            $category = Category::where('unit_id', 1)->where('slug', $slug)->firstOrFail();
+            $news = News::where('unit_id', 1)->where('category_id', $category->id)->latest()->paginate(12);
         }
         
         return view('news', compact('news'));
@@ -22,8 +22,8 @@ class newsController extends Controller
 
     public function show($slug = null)
     {
-        $news = News::where('slug', $slug)->firstOrFail();
-        $news_more = News::where('show', 1)->latest()->limit(3)->get();
+        $news = News::where('unit_id', 1)->where('slug', $slug)->firstOrFail();
+        $news_more = News::where('unit_id', 1)->where('show', 1)->latest()->limit(3)->get();
         return view('show', compact('news', 'news_more'));
     }
 }

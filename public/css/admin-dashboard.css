@@ -1,0 +1,239 @@
+a {
+    color: #267aec;
+}
+
+#content-wrapper {
+    position: relative;
+}
+
+aside {
+    position: fixed;
+    width: 20%;
+    height: 100vh;
+    left: 0;
+    top: 0;
+    border-right: 1px solid #cdcdcd;
+}
+
+aside .header {
+    text-align: center;
+    padding: 20px;
+    border-bottom: 1px solid #cdcdcd;
+}
+
+aside .header h5 {
+    font-size: 18pt;
+    color: #333;
+    margin: 0;
+}
+
+aside .menus {
+    padding: 20px;
+    overflow-y: auto;
+    max-height: 90vh;
+}
+
+aside .menus::-webkit-scrollbar {
+    background: #cdcdcd;
+    width: 3px;
+}
+
+aside .menus::-webkit-scrollbar-button {
+    display: none;
+}
+
+aside .menus::-webkit-scrollbar-thumb {
+    background: #969696;
+}
+
+aside .menus .menu-name {
+    font-size: 14px;
+    font-weight: bold;
+    margin: 10px 0;
+}
+
+aside .menus ul {
+    padding: 0;
+    margin: 0;
+}
+
+aside .menus ul li {
+    position: relative;
+    padding: 10px 15px;
+    list-style: none;
+    margin-bottom: 10px;
+}
+
+aside .menus ul li.active{
+    background: #ecf4fe;
+    border-radius: 5px;
+}
+
+aside .menus ul li a {
+    color: #969696;
+    transition: all 0.4s;
+}
+
+aside .menus ul li:hover a {
+    color: #333;
+}
+
+aside .menus ul li.active a{
+    color: #267aec;
+}
+
+aside .menus ul li.active ul.submenus {
+    display: block !important;
+}
+
+aside .menus ul li ul.submenus {
+    display: none;
+    position: relative;
+    padding: 20px 0;
+}
+
+aside .menus ul li ul.submenus li {
+    padding: 5px 20px;
+    margin-bottom: 0;
+    margin-left: 7px;
+    border-left: 3px solid #969696;
+    transition: all 0.4s;
+}
+
+aside .menus ul li ul.submenus li:hover {
+    border-left: 3px solid #333;
+}
+
+aside .menus ul li ul.submenus li.active {
+    border-left: 3px solid #267aec;
+    background: transparent;
+    border-radius: 0;
+}
+
+aside .menus ul li ul.submenus li a {
+    color: #969696;
+    transition: all 0.4s;
+}
+
+aside .menus ul li ul.submenus li:hover a {
+    color: #333;
+}
+
+aside .menus ul li ul.submenus li.active a {
+    color: #267aec;
+}
+
+main {
+    position: absolute;
+    width: 80%;
+    right: 0;
+    top: 0;
+}
+
+.navigation {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #fff;
+    padding: 10px 20px;
+    border-bottom: 1px solid #cdcdcd;
+}
+
+.navigation .nav ul {
+    padding: 0;
+    margin: 0;
+}
+
+.navigation .nav ul li {
+    display: inline;
+    list-style: none;
+    padding: 0;
+    margin-left: 15px;
+}
+
+.navigation .nav ul li a.fn {
+    font-size: 16pt;
+}
+
+.dropdown-toggle::after {
+    display: none !important;
+}
+
+.navigation .nav ul li .dropdown-menu{
+    margin-right: 20px !important;
+    margin-top: 11px !important;
+    white-space: nowrap;
+}
+
+.navigation .nav ul li .dropdown-menu li{
+    margin: 0;
+}
+
+.navigation .dropdown-profile {
+    padding: 20px;
+    text-align: center;
+}
+
+.navigation .dropdown-profile .photo-user {
+    font-size: 50pt;
+}
+
+.navigation .drowdown-profile-footer {
+    font-size: 10pt;
+}
+
+main {
+    padding-bottom: 50px;
+}
+
+main .breadcrumb-wrapper {
+    padding: 20px;
+}
+
+main .breadcrumb-wrapper .breadcrumb {
+    margin-bottom: 0 !important;
+}
+
+main .content .card-header {
+    background: #267aec;
+    color: #fff;
+    padding: 20px;
+}
+
+main .content .card-header h4 {
+    font-size: 18px;
+    margin-bottom: 0;
+}
+
+main .content .card-body {
+    padding: 20px;
+    background: #fff;
+    border: 1px solid #cdcdcd;
+}
+
+main .content {
+    padding: 0 20px;
+}
+
+.ck-editor__editable_inline {
+    height: 400px;
+}
+
+.bg-dark-2 {
+    background: #969696;
+}
+
+.photo {
+    margin: 0 auto;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    overflow: hidden;
+}
+.photo img {
+    width: 100%;
+}
+
+table tr td {
+    vertical-align: middle;
+}

@@ -16,14 +16,13 @@ class yearSeeder extends Seeder
     public function run()
     {
         DB::table('years')->insert([
-            ['name' => '2019/2020', 'status' => 'Genap', 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
+            ['name' => '0000/0000', 'status' => 'Tidak Diketahui', 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
             ['name' => '2019/2020', 'status' => 'Ganjil', 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
-            ['name' => '2020/2021', 'status' => 'Genap', 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
+            ['name' => '2019/2020', 'status' => 'Genap', 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
             ['name' => '2020/2021', 'status' => 'Ganjil', 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
-            ['name' => '2021/2022', 'status' => 'Genap', 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
+            ['name' => '2020/2021', 'status' => 'Genap', 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
             ['name' => '2021/2022', 'status' => 'Ganjil', 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
-            ['name' => '2022/2023', 'status' => 'Genap', 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
-            ['name' => '2022/2023', 'status' => 'Ganjil', 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
+            ['name' => '2021/2022', 'status' => 'Genap', 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
         ]);
     }
 }

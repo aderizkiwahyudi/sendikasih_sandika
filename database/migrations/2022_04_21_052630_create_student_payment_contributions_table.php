@@ -15,12 +15,12 @@ return new class extends Migration
     {
         Schema::create('student_payment_contributions', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('contribution_id')->unsigned();
+            $table->bigInteger('contribution_item_id')->unsigned();
             $table->string('user_id', 255);
             $table->integer('nominal');
             $table->timestamps();
 
-            $table->foreign('contribution_id')->references('id')->on('contributions')->onDelete('cascade');
+            $table->foreign('contribution_item_id')->references('id')->on('contribution_items')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }

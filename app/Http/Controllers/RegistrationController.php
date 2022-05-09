@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Mail\RecruitmentEmail;
+use App\Models\MoreSetting;
 use App\Models\Recruitment;
 use App\Models\RecruitmentEmailVerification;
 use App\Models\RecruitmentSetting;
@@ -71,6 +72,15 @@ class RegistrationController extends Controller
                 }
             }   
         }
+
+        if($request->segment(2) == 'guru-karyawan'){
+            if(RecruitmentSetting::where('unit_id', 1)->first()->active == 0){
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Mohon maaf, ppdb sudah ditutup! Silakan tunggu pendaftaran berikutnya.',
+                ]);
+            }
+        }
         
         $rules = [
             'name' => 'required|max:100',
@@ -124,6 +134,7 @@ class RegistrationController extends Controller
 
         $recruitment = new Recruitment();
         $recruitment->user_id = $id;
+        $recruitment->no_registration = rand(1,999) . time() .rand(1,999);
         $recruitment->step = 1;
         $recruitment->result = 0;
         $recruitment->verify_at = null;
@@ -134,7 +145,7 @@ class RegistrationController extends Controller
             $student->user_id = $id;
             $student->status_id = 3;
             $student->class_id = 1;
-            $student->year_id = Year::latest()->first()->id;
+            $student->year_id = MoreSetting::first()->year_id;
             $student->name = $request->name;
             $student->student_status = $request->jenis;
             $student->save();
@@ -142,12 +153,14 @@ class RegistrationController extends Controller
             $teacher = new Teacher();
             $teacher->user_id = $id;
             $teacher->status_id = 3;
+            $teacher->year_id = MoreSetting::first()->year_id;
             $teacher->name = $request->name;
             $teacher->save();
         }else{
             $staff = new Staff();
             $staff->user_id = $id;
             $staff->status_id = 3;
+            $staff->year_id = MoreSetting::first()->year_id;
             $staff->name = $request->name;
             $staff->save();
         }

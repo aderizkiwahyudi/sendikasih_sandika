@@ -1,4 +1,10 @@
-<?php 
+<?php
+
+use App\Models\Role;
+use App\Models\Status;
+use App\Models\Unit;
+use FontLib\Table\Type\name;
+use Illuminate\Support\Str;
 
 function tanggal($date)
 {
@@ -29,4 +35,41 @@ function textToUnit($text){
 function unitToText($id){
     $unit = ['', 'yayasan', 'mi', 'mts', 'sma'];
     return $unit[$id];
+}
+
+function unit_name($id)
+{
+    if(is_string($id)){
+        $unit = Unit::where('name', 'like', '%'. $id .'%')->first();
+        return $unit->id;
+    }
+
+    $unit = Unit::where('id', $id)->first();
+    return ucwords($unit->name);
+}
+
+function get_role($id)
+{
+    $eng = ['admin' => 'admin','siswa' => 'student', 'guru' => 'teacher', 'staff' => 'staff'];
+    $role = Role::where('name', $eng[$id])->first();
+    return $role->id;
+}
+
+function get_status($name){
+    $status = Status::where('name', $name)->first();
+    return $status->id;
+}
+
+function file_upload($file)
+{
+    if($file){
+        $name = $file->getClientOriginalName();
+        $ext = $file->getClientOriginalExtension();
+        $name = pathinfo($name, PATHINFO_FILENAME);
+        $rename = time() . '-' . Str::slug($name) . ".{$ext}";
+        $file->move('img', $rename);
+        return asset('img/' . $rename);
+    }
+
+    return false;
 }

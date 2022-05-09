@@ -14,12 +14,12 @@ return new class extends Migration
     public function up()
     {
         Schema::create('page_files', function (Blueprint $table) {
-            $table->string('id', 255)->primary();
+            $table->id();
             $table->bigInteger('unit_id')->unsigned();
             $table->string('title', 255);
-            $table->string('description');
-            $table->string('slug');
-            $table->string('url');
+            $table->text('description');
+            $table->text('slug');
+            $table->text('url');
             $table->string('year', 5)->nullable();
             $table->string('category');
             $table->timestamps();

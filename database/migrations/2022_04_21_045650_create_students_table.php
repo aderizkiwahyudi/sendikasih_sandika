@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('gender', 20)->nullable();
             $table->string('birthday_at', 150)->nullable();
             $table->date('birthday')->nullable();
-            $table->string('address')->nullable();
+            $table->text('address')->nullable();
             $table->string('previous_school', 255)->nullable();
             $table->string('previous_school_address')->nullable();
             $table->string('phone', 20)->nullable();
@@ -31,11 +31,11 @@ return new class extends Migration
             $table->string('father_job', 255)->nullable();
             $table->string('mother_name', 100)->nullable();
             $table->string('mother_job', 255)->nullable();
-            $table->string('parents_address')->nullable();
+            $table->text('parents_address')->nullable();
             $table->string('parents_phone')->nullable();
-            $table->string('photo')->nullable();
-            $table->string('kk')->nullable();
-            $table->string('ijazah')->nullable();
+            $table->text('photo')->nullable();
+            $table->text('kk')->nullable();
+            $table->text('ijazah')->nullable();
             $table->integer('student_status');
             $table->timestamps();
 

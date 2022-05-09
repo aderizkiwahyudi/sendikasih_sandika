@@ -20,12 +20,12 @@
                 <div class="col-md-9">
                     <h2>{{ $news->title }}</h2>
                     <p class="news-info">
-                        {!! $news->category->name == 'Berita' ? '' : '<a href="' . url('kategori/' . $news->category->slug) . '">' . $news->category->name . '</a> | ' !!}
+                        {!! !isset($news->category->name) ? '' : '<a href="' . url('kategori/' . $news->category->slug) . '">' . $news->category->name . '</a> | ' !!}
                         {{ tanggal_berita($news->created_at) }} ditulis oleh admin
                     </p>
                     <img src="{{ $news->thumbnail }}" alt="Gambar" width="100%"/>
                     <div class="article-text my-3">
-                        {!! $news->text !!}
+                        {!! $news->content !!}
                     </div>
                     <div class="more-news mt-5">
                         <h5 class="mb-3">Mungkin anda tertarik dengan :</h5>
@@ -37,7 +37,7 @@
                                         <div class="card-body">
                                             <h4><a href="{{ url('berita/' . $item->slug) }}">{{ $item->title }}</a></h4>
                                             <p class="info">
-                                                {!! $item->category->name == 'Berita' ? '' : '<a href="' . url('kategori/' . $item->category->slug) . '">' . $item->category->name . '</a> | ' !!}
+                                                {!! !isset($item->category->name) ? '' : '<a href="' . url('kategori/' . $item->category->slug) . '">' . $item->category->name . '</a> | ' !!}
                                                 {{ tanggal_berita($item->created_at) }}
                                             </p>
                                             <p>{{ htmlspecialchars(strip_tags(substr($item->text, 0, 150))) }}</p>

@@ -17,8 +17,8 @@ return new class extends Migration
             $table->string('id', 255)->primary();
             $table->bigInteger('unit_id')->unsigned();
             $table->string('title', 255);
-            $table->string('content');
-            $table->string('slug');
+            $table->text('content');
+            $table->text('slug');
             $table->timestamps();
 
             $table->foreign('unit_id')->references('id')->on('units')->onDelete('cascade');

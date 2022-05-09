@@ -16,10 +16,10 @@ class recruitmentSettingSeeder extends Seeder
     public function run()
     {
         DB::table('recruitment_settings')->insert([
-            ['unit_id' => 1, 'year_id' => 1, 'max' => 300, 'active' => 1, 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
-            ['unit_id' => 2, 'year_id' => 1, 'max' => 300, 'active' => 1, 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
-            ['unit_id' => 3, 'year_id' => 1, 'max' => 300, 'active' => 1, 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
-            ['unit_id' => 4, 'year_id' => 1, 'max' => 300, 'active' => 1, 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
+            ['unit_id' => 1, 'max' => 300, 'active' => 1, 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
+            ['unit_id' => 2, 'max' => 300, 'active' => 1, 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
+            ['unit_id' => 3, 'max' => 300, 'active' => 1, 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
+            ['unit_id' => 4, 'max' => 300, 'active' => 1, 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
         ]);
     }
 }

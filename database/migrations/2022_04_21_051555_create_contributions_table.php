@@ -15,9 +15,8 @@ return new class extends Migration
     {
         Schema::create('contributions', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('year_id')->unsigned();
             $table->string('name', 255);
-            $table->string('description');
+            $table->text('description');
             $table->timestamps();
         });
     }

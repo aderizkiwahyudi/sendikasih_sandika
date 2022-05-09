@@ -15,7 +15,7 @@ class welcomeController extends Controller
      */
     public function __invoke(Request $request)
     {
-        $news = News::where('show', 1)->latest()->limit(4)->get();
+        $news = News::where('unit_id', 1)->where('show', 1)->latest()->limit(4)->get();
         return view('welcome', compact('news'));
     }
 }

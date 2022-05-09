@@ -17,8 +17,8 @@ return new class extends Migration
             $table->id();
             $table->bigInteger('unit_name_structure_id')->unsigned();
             $table->string('name', 100);
-            $table->string('description');
-            $table->string('photo');
+            $table->text('description');
+            $table->text('photo');
             $table->timestamps();
 
             $table->foreign('unit_name_structure_id')->references('id')->on('unit_name_structures')->onDelete('cascade');

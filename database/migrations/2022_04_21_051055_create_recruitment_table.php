@@ -14,6 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('recruitment', function (Blueprint $table) {
+            $table->string('no_registration', 255)->primary();
             $table->string('user_id', 255);
             $table->integer('step');
             $table->integer('result');

@@ -23,7 +23,7 @@ class pageController extends Controller
         if($request->segment(2) == 'rencana-strategis' || $request->segment(2) == 'perjanjian-kerja'){
             $items = PageFile::where('category', $request->segment(2))->get();
         }else{
-            $page = Page::where('slug', $request->slug)->firstOrFail();
+            $page = Page::where('unit_id', 1)->where('slug', $request->slug)->firstOrFail();
         }
 
         $structures = UnitNameStructure::get();

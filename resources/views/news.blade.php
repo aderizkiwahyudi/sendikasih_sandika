@@ -29,7 +29,7 @@
                                 <div class="card-body">
                                     <h4><a href="{{ url('berita/' . $item->slug) }}">{{ $item->title }}</a></h4>
                                     <p class="info">
-                                        {!! $item->category->name == 'Berita' ? '' : '<a href="' . url('kategori/' . $item->category->slug) . '">' . $item->category->name . '</a> | ' !!}
+                                        {!! !isset($item->category->name) ? '' : '<a href="' . url('kategori/' . $item->category->slug) . '">' . $item->category->name . '</a> | ' !!}
                                         {{ tanggal_berita($item->created_at) }}
                                     </p>
                                     <p>{{ htmlspecialchars(strip_tags(substr($item->content, 0, 150))) }}</p>

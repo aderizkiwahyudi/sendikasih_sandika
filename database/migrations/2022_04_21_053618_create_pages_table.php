@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->bigInteger('unit_id')->unsigned();
             $table->string('title', 255);
-            $table->string('content');
+            $table->text('content');
             $table->string('slug');
             $table->timestamps();
 
