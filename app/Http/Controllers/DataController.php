@@ -7,6 +7,7 @@ use App\Models\Classroom;
 use App\Models\Gallery;
 use App\Models\News;
 use App\Models\PageFile;
+use App\Models\Recruitment;
 use App\Models\Staff;
 use App\Models\Student;
 use App\Models\Teacher;
@@ -38,7 +39,7 @@ class DataController extends Controller
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
                                         <form method="post" action="'. route('admin.category.edit.prosess', $categories->id) .'">
-                                            <input type="hidden" name="_token" value="'. csrf_token() .'"/>
+                                            <input disabled type="hidden" name="_token" value="'. csrf_token() .'"/>
                                             <div class="modal-header">
                                                 <h5 class="modal-title">Tambah Kategori</h5>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -46,7 +47,7 @@ class DataController extends Controller
                                             <div class="modal-body">
                                                 <div class="form-group text-start">
                                                     <label class="text-dark mb-2">Nama</label>
-                                                    <input type="text" class="form-control" name="name" value="' . $categories->name . '" placeholder="Masukan nama kategori" required/>
+                                                    <input disabled type="text" class="form-control" name="name" value="' . $categories->name . '" placeholder="Masukan nama kategori" required/>
                                                 </div>
                                             </div>
                                             <div class="modal-footer">
@@ -94,7 +95,7 @@ class DataController extends Controller
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content text-start">
                                     <form method="post" action="'. route('admin.pages.file.edit', [$request->slug, $files->id]) .'" enctype="multipart/form-data">
-                                        <input type="hidden" name="_token" value="'. csrf_token() .'"/>
+                                        <input disabled type="hidden" name="_token" value="'. csrf_token() .'"/>
                                         <div class="modal-header">
                                             <h5 class="modal-title">Edit Data</h5>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -102,11 +103,11 @@ class DataController extends Controller
                                         <div class="modal-body">
                                             <div class="form-group mb-3">
                                                 <label class="text-dark mb-2">Judul</label>
-                                                <input type="text" class="form-control" name="title" value="'. $files->title .'" placeholder="Masukan judul" required/>
+                                                <input disabled type="text" class="form-control" name="title" value="'. $files->title .'" placeholder="Masukan judul" required/>
                                             </div>
                                             <div class="form-group mb-3">
                                                 <label class="text-dark mb-2">Tahun</label>
-                                                <input type="number" class="form-control" name="year" value="'. $files->year .'" placeholder="Masukan tahun" maxlength="5" required/>
+                                                <input disabled type="number" class="form-control" name="year" value="'. $files->year .'" placeholder="Masukan tahun" maxlength="5" required/>
                                             </div>
                                             <div class="form-group mb-3">
                                                 <label class="text-dark mb-2">Keterangan</label>
@@ -114,7 +115,7 @@ class DataController extends Controller
                                             </div>
                                             <div class="form-group mb-3">
                                                 <label class="text-dark mb-2">File</label>
-                                                <input type="file" class="form-control" name="file" placeholder="Masukan file"/>
+                                                <input disabled type="file" class="form-control" name="file" placeholder="Masukan file"/>
                                                 <div class="mt-2">
                                                     <a href="'. $files->url .'"><i class="bi bi-file-pdf"></i> Download</a>
                                                 </div>
@@ -150,7 +151,7 @@ class DataController extends Controller
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content text-start">
                                     <form method="post" action="'. route('admin.structures.edit', $structures->id) .'" enctype="multipart/form-data">
-                                        <input type="hidden" name="_token" value="'. csrf_token() .'"/>
+                                        <input disabled type="hidden" name="_token" value="'. csrf_token() .'"/>
                                         <div class="modal-header">
                                             <h5 class="modal-title">Edit Data</h5>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -158,7 +159,7 @@ class DataController extends Controller
                                         <div class="modal-body">
                                             <div class="form-group mb-3">
                                                 <label class="text-dark mb-2">Nama</label>
-                                                <input type="text" class="form-control" name="name" value="'. $structures->name .'" placeholder="Masukan nama struktur" required/>
+                                                <input disabled type="text" class="form-control" name="name" value="'. $structures->name .'" placeholder="Masukan nama struktur" required/>
                                             </div>
                                         </div>
                                         <div class="modal-footer">
@@ -190,7 +191,7 @@ class DataController extends Controller
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content text-start">
                                         <form method="post" action="'.route('admin.structures.item.edit', $structure->id).'" enctype="multipart/form-data">
-                                            <input type="hidden" name="_token" value="'.csrf_token().'"/>
+                                            <input disabled type="hidden" name="_token" value="'.csrf_token().'"/>
                                             <div class="modal-header">
                                                 <h5 class="modal-title">Edit Data</h5>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -198,7 +199,7 @@ class DataController extends Controller
                                             <div class="modal-body">
                                                 <div class="form-group mb-3">
                                                     <label class="text-dark mb-2">Nama</label>
-                                                    <input type="text" class="form-control" name="name" value="'.$structure->name.'" placeholder="Masukan nama" required/>
+                                                    <input disabled type="text" class="form-control" name="name" value="'.$structure->name.'" placeholder="Masukan nama" required/>
                                                 </div>
                                                 <div class="form-group mb-3">
                                                     <label class="text-dark mb-2">Keterangan</label>
@@ -206,7 +207,7 @@ class DataController extends Controller
                                                 </div>
                                                 <div class="form-group mb-3">
                                                     <label class="text-dark mb-2">Photo</label>
-                                                    <input type="file" class="form-control mb-4" name="photo"/>
+                                                    <input disabled type="file" class="form-control mb-4" name="photo"/>
                                                     <div class="photo" style="margin:0; width:100px; height:100px;"><img src="'.$structure->photo.'" alt="Photo"></div>
                                                 </div>
                                             </div>
@@ -266,7 +267,7 @@ class DataController extends Controller
                             return ucwords(unit_name($users->account->unit_id));
                         })
                         ->addColumn('action', function($users) use ($request){
-                            return '<a href="'.route('admin.users.academic.edit', [$request->segment(4) , $users->user_id]).'" class="btn btn-sm btn-primary me-2"><i class="bi bi-pencil-square"></i> Edit</a>';
+                            return '<a href="'.route('admin.users.academic.detail', [$request->segment(4) , $users->user_id]).'" class="btn btn-sm btn-primary me-2"><i class="bi bi-pencil-square"></i> Edit</a>';
                         })
                         ->rawColumns(['photo', 'status', 'action'])
                         ->make(true);
@@ -296,7 +297,7 @@ class DataController extends Controller
                                                 <div class="modal-body">
                                                     <div class="form-group">
                                                         <label for="" class="mb-2">Nama Kelas</label>
-                                                        <input type="text" name="name" value="'.$classroom->name.'" class="form-control" placeholder="Masukan Nama Kelas" required/>
+                                                        <input disabled type="text" name="name" value="'.$classroom->name.'" class="form-control" placeholder="Masukan Nama Kelas" required/>
                                                     </div>
                                                 </div>
                                                 <div class="modal-footer">
@@ -337,11 +338,11 @@ class DataController extends Controller
                                                     <label for="" class="mb-2">Tahun</label>
                                                     <div class="row">
                                                         <div class="col-md-5">
-                                                            <input type="text" name="year_1" value="'.$year_explode[0].'" class="form-control" placeholder="Masukan Tahun Akademik" maxlength="5" required/>
+                                                            <input disabled type="text" name="year_1" value="'.$year_explode[0].'" class="form-control" placeholder="Masukan Tahun Akademik" maxlength="5" required/>
                                                         </div>
                                                         <div class="col-md-2 text-center">/</div>
                                                         <div class="col-md-5">
-                                                            <input type="text" name="year_2" value="'.$year_explode[1].'" class="form-control" placeholder="Masukan Tahun Akademik" maxlength="5" required/>
+                                                            <input disabled type="text" name="year_2" value="'.$year_explode[1].'" class="form-control" placeholder="Masukan Tahun Akademik" maxlength="5" required/>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -365,6 +366,47 @@ class DataController extends Controller
                                 ';
                         })
                         ->rawColumns(['action'])
+                        ->make(true);
+    }
+
+    public function recruitment(Request $request)
+    {
+        $user = $request->role == 'guru' ? Teacher::where('status_id', get_status('recruitment'))->orderBy('created_at', 'ASC')->get() : ($request->role == 'staff' ? Staff::where('status_id', get_status('recruitment'))->orderBy('created_at', 'ASC')->get() : Student::where('status_id', get_status('recruitment'))->orderBy('created_at', 'ASC')->get());
+        
+        if($request->role == 'ppdp'){
+            $user = $user->filter(function($item){
+                $item->student_status == 2;
+            });
+        }
+
+        if($request->query('unit')){
+            $user = $user->filter(function($item) use ($request){
+                return $item->account->unit_id == unit_name($request->query('unit'));
+            });
+        }
+        
+        $user = $user->filter(function($item){
+            return $item->recruitment->step == 4;
+        });
+
+        return DataTables::of($user)
+                        ->addIndexColumn()
+                        ->addColumn('no_registration', function($user){
+                            return $user->recruitment->no_registration;
+                        })
+                        ->addColumn('photo', function($user){
+                            return '<div class="photo"><img src="'.$user->photo.'" alt="Photo"></div>';
+                        })
+                        ->addColumn('email', function($user){
+                            return $user->account->email;
+                        })
+                        ->addColumn('status', function($user){
+                            return $user->recruitment->result == 0 ? '<span class="badge rounded-pill bg-warning text-dark">Pending</span>' : ($user->recruitment->result == 1 ? '<span class="badge rounded-pill bg-success text-white">Lolos</span>' : '<span class="badge rounded-pill bg-danger text-white">Tidak Lolos</span>');
+                        })
+                        ->addColumn('action', function($user) use ($request){
+                            return '<a href="'.route('admin.recruitment.detail', [$request->role, $user->user_id]).'" class="btn btn-sm btn-primary me-2"><i class="bi bi-pencil-square"></i></a>';
+                        })
+                        ->rawColumns(['photo', 'action', 'status'])
                         ->make(true);
     }
 }

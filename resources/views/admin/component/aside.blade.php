@@ -95,6 +95,32 @@
                     @endforeach
                 </ul>
             </li>
+            <div class="menu-name">PPDB & PPDP</div>
+            <li class="sub {{  Request::segment(2) == 'pendaftaran' && Request::segment(3) == 'ppdb' || Request::segment(3) == 'ppdp' ? 'active' : '' }}">
+                <a href="#"><i class="bi bi-person me-2"></i> PESERTA DIDIK</a>
+                <ul class="submenus">
+                    <li class="{{  Request::segment(2) == 'pendaftaran' && Request::segment(3) == 'ppdb' ? 'active' : '' }}">
+                        <a href="{{ route('admin.recruitment', ['ppdb']) }}">PPDB</a>
+                    </li>
+                    <li class="{{  Request::segment(2) == 'pendaftaran' && Request::segment(3) == 'ppdp' ? 'active' : '' }}">
+                        <a href="{{ route('admin.recruitment', ['ppdp']) }}">PPDP</a>
+                    </li>
+                </ul>
+            </li>
+            <li class="sub {{  Request::segment(2) == 'pendaftaran' && Request::segment(3) == 'guru' || Request::segment(3) == 'staff' ? 'active' : '' }}">
+                <a href="#"><i class="bi bi-person me-2"></i> GURU & STAFF</a>
+                <ul class="submenus">
+                    <li class="{{  Request::segment(2) == 'pendaftaran' && Request::segment(3) == 'guru' ? 'active' : '' }}">
+                        <a href="{{ route('admin.recruitment', ['guru']) }}">Guru</a>
+                    </li>
+                    <li class="{{  Request::segment(2) == 'pendaftaran' && Request::segment(3) == 'staff' ? 'active' : '' }}">
+                        <a href="{{ route('admin.recruitment', ['staff']) }}">Staff</a>
+                    </li>
+                </ul>
+            </li>
+            <li class="{{ Request::segment(2) =='setting' ? 'active' : '' }}">
+                <a href="{{ route('admin.recruitment.setting') }}"><i class="bi bi-gear me-2"></i> PENGATURAN</a>
+            </li>
             <div class="menu-name">AKUN</div>
             <li class="{{ Request::segment(2) =='setting' ? 'active' : '' }}">
                 <a href="{{ route('admin.setting') }}"><i class="bi bi-gear me-2"></i> PENGATURAN</a>

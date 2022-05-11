@@ -132,8 +132,12 @@ Route::prefix('administrator')->group(function(){
         Route::get('user/{role}/{unit}', [AdminController::class, 'users_academic'])->name('admin.users.academic');
         Route::get('user/{role}/{unit}/add', [AdminController::class, 'users_academic_add'])->name('admin.users.academic.add');
         Route::post('user/{role}/{unit}/add', [AdminController::class, 'users_academic_prosess'])->name('admin.users.academic.add.prosess');
-        Route::get('user/{role}/{id}/edit', [AdminController::class, 'users_academic_edit'])->name('admin.users.academic.edit');
-        Route::post('user/{role}/{id}/edit', [AdminController::class, 'users_academic_prosess'])->name('admin.users.academic.edit.prosess');
+        Route::get('user/{role}/{id}/detail', [AdminController::class, 'users_academic_detail'])->name('admin.users.academic.detail');
+        Route::get('user/{role}/{id}/edit/{unit_id}', [AdminController::class, 'users_academic_edit'])->name('admin.users.academic.edit');
+        Route::post('user/{role}/{id}/edit/{unit_id}', [AdminController::class, 'users_academic_prosess'])->name('admin.users.academic.edit.prosess');
+        Route::get('user/{role}/{id}/delete', [AdminController::class, 'users_academic_delete'])->name('admin.users.academic.delete');
+
+        Route::get('ubah-status-user/{id}', [AdminController::class, 'users_academic_change_status'])->name('admin.users.academic.change.status');
 
         Route::get('kelas/{unit}', [AdminController::class, 'classroom'])->name('admin.class');
         Route::post('kelas/{unit}/add', [AdminController::class, 'classroom_proses'])->name('admin.class.add');
@@ -144,6 +148,13 @@ Route::prefix('administrator')->group(function(){
         Route::post('tahun-akademik/add', [AdminController::class, 'year_prosess'])->name('admin.year.add');
         Route::post('tahun-akademik/edit/{id}', [AdminController::class, 'year_prosess'])->name('admin.year.edit');
         Route::get('tahun-akademik/delete/{id}', [AdminController::class, 'year_delete'])->name('admin.year.delete');
+
+        Route::get('pendaftaran/pengaturan', [AdminController::class, 'recruitment_setting'])->name('admin.recruitment.setting');
+        Route::post('pendaftaran/pengaturan', [AdminController::class, 'recruitment_setting_prosess'])->name('admin.recruitment.setting.prosess');
+        Route::get('pendaftaran/reset', [AdminController::class, 'recruitment_reset'])->name('admin.recruitment.reset');
+        Route::get('pendaftaran/{role}', [AdminController::class, 'recruitment'])->name('admin.recruitment');
+        Route::get('pendaftaran/{role}/detail/{id}', [AdminController::class, 'recruitment_detail'])->name('admin.recruitment.detail');
+        Route::post('pendaftaran/{role}/detail/{id}', [AdminController::class, 'recruitment_prosess'])->name('admin.recruitment.prosess');
 
         Route::get('pengaturan', [AdminController::class, 'setting'])->name('admin.setting');
         Route::post('pengaturan', [AdminController::class, 'setting_prosess'])->name('admin.setting');
@@ -160,6 +171,7 @@ Route::prefix('administrator')->group(function(){
         Route::get('data/user/{role}/{unit}', [DataController::class, 'users_academic'])->name('admin.users.academic.data');
         Route::get('data/kelas/{unit}', [DataController::class, 'classroom'])->name('admin.classroom.data');
         Route::get('data/year', [DataController::class, 'year'])->name('admin.year.data');
+        Route::get('data/recruitment', [DataController::class, 'recruitment'])->name('admin.recruitment.data');
 
         #CKEDITOR
         Route::post('ckeditor/upload/image', Ckeditor::class);

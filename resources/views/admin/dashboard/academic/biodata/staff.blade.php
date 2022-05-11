@@ -17,7 +17,7 @@
         @endif
         <div class="form-group row align-items-center mb-4">
             <div class="col-md-3">Username <small class="text-danger">*</small></div>
-            <div class="col-md-5"><input type="text" name="username" value="{{ old('name', $user->account->username ?? '') }}" id="username" placeholder="Masukan nama" class="form-control"></div>
+            <div class="col-md-5"><input type="text" name="username" value="{{ old('username', $user->account->username ?? '') }}" id="username" placeholder="Masukan nama" class="form-control"></div>
         </div>
         <div class="form-group row align-items-center mb-4">
             <div class="col-md-3">Email <small class="text-danger">*</small></div>
@@ -25,7 +25,12 @@
         </div>
         <div class="form-group row align-items-center mb-4">
             <div class="col-md-3">Password <small class="text-danger">*</small></div>
-            <div class="col-md-5"><input type="password" name="password" id="password" placeholder="Masukan password" class="form-control"></div>
+            <div class="col-md-5">
+                <input type="password" name="password" id="password" placeholder="Masukan password" class="form-control">
+                @if (Request::segment(5) == 'edit')
+                    <small class="text-danger">Kosongkan jika tidak ingin mengubah</small>
+                @endif
+            </div>
         </div>
 
         <h4>BIODATA DIRI</h4>
@@ -68,7 +73,12 @@
 
         <div class="form-group row align-items-center mb-4">
             <div class="col-md-3">Photo <small class="text-danger">*</small></div>
-            <div class="col-md-5"><input type="file" name="photo" id="photo" class="form-control"/></div>
+            <div class="col-md-5">
+                <input type="file" name="photo" id="photo" class="form-control"/>
+                @if (Request::segment(5) == 'edit')
+                    <img src="{{ $user->photo }}" alt="Photo" class="mt-3" width="120px"/>
+                @endif
+            </div>
         </div>
     </div>
     <div class="main-button">

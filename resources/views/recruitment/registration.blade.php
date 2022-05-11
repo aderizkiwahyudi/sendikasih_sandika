@@ -68,6 +68,7 @@
                         </form>
                 </div>
                 <div class="main-footer">
+                    <p style="font-size: 15px;">Sudah punya akun? <a href="{{ route('login') }}">Masuk Sekarang</a></p>
                     <p>Yayasan Sendikasih Sandika © 2022</p>
                 </div>
             </div>

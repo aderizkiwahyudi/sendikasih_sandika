@@ -21,4 +21,8 @@ class Student extends Model
     {
         return $this->belongsTo(Year::class, 'year_id', 'id');
     }
+    public function recruitment()
+    {
+        return $this->hasOne(Recruitment::class, 'user_id', 'user_id');
+    }
 }

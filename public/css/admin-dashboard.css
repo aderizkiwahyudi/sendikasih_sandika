@@ -35,7 +35,7 @@ aside .menus {
 
 aside .menus::-webkit-scrollbar {
     background: #cdcdcd;
-    width: 3px;
+    width: 5px;
 }
 
 aside .menus::-webkit-scrollbar-button {
@@ -236,4 +236,18 @@ main .content {
 
 table tr td {
     vertical-align: middle;
+}
+
+.bio-label {
+    font-size: 13px;
+    color: rgba(0,0,0.2);
+}
+.max-height-200 {
+    max-height: 200px;
+    overflow: hidden;
+}
+.form-control:disabled {
+    background: #fff !important;
+    padding:0;
+    border: 0;
 }

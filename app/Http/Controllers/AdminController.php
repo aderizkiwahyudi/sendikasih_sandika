@@ -11,6 +11,9 @@ use App\Models\MoreSetting;
 use App\Models\News;
 use App\Models\Page;
 use App\Models\PageFile;
+use App\Models\Recruitment;
+use App\Models\RecruitmentEmailVerification;
+use App\Models\RecruitmentSetting;
 use App\Models\Staff;
 use App\Models\Student;
 use App\Models\Teacher;
@@ -431,14 +434,28 @@ class AdminController extends Controller
         $year = Year::orderBy('id', 'DESC')->where('id', '>', 1)->groupBy('name')->get();
         return view('admin.dashboard.academic.add', compact('class', 'year'));
     }
+    public function users_academic_edit(Request $request)
+    {
+        $class = Classroom::get();
+        
+        $year = Year::orderBy('id', 'DESC')->groupBy('name')->get();
+
+        if($request->role == 'guru'){
+            $user = Teacher::where('user_id', $request->id)->firstOrFail();
+        }elseif($request->role == 'staff'){
+            $user = Staff::where('user_id', $request->id)->firstOrFail();
+        }else{
+            $user = Student::where('user_id', $request->id)->firstOrFail();
+        }
+
+        return view('admin.dashboard.academic.add', compact('class', 'year', 'user'));
+    }
     public function users_academic_prosess(Request $request)
     {
         $unit_id = $request->unit_id ?? unit_name($request->unit);
 
         if($request->role == 'siswa'){
             $rules = [
-                'username' => 'required|alpha_dash|unique:users',
-                'email' => 'required|email|unique:users',
                 'name' => 'required|max:100',
                 'gender' => 'required',
                 'birthday_at' => 'required|max:255',
@@ -502,6 +519,9 @@ class AdminController extends Controller
                 $rules['photo'] = 'required|image';
                 $rules['password'] = 'required';
                 
+                $rules['username'] = 'required|alpha_dash|unique:users';
+                $rules['email'] = 'required|email|unique:users';
+
                 #Jika Bukan MI, Ijazah Wajib
                 if($unit_id > 2){
                     $rules['ijazah'] = 'required|mimes:pdf';
@@ -509,6 +529,9 @@ class AdminController extends Controller
             }else{
                 $rules['kk'] = 'mimes:pdf';
                 $rules['photo'] = 'image';
+
+                $rules['username'] = 'required|alpha_dash|unique:users,username,' . $request->id;
+                $rules['email'] = 'required|email|unique:users,email,' . $request->id;
             }
 
             #JIKA BUKAN UNIT MI
@@ -548,7 +571,7 @@ class AdminController extends Controller
 
             if($request->year_id) $request->year_id = $request->year_id->id; else return back()->withErrors(['Masukan tahun ajaran dengan benar'])->withInput($request->all());
 
-            $id = rand(1, 999999) . time() . rand(0, 100);
+            $request->id ? $id = $request->id : $id = rand(1, 999999) . time() . rand(0, 100);
     
             $student['user_id'] = $id;
             $student['status_id'] = get_status('active');
@@ -573,7 +596,7 @@ class AdminController extends Controller
             $account['unit_id'] = $unit_id;
             $account['username'] = $request->username;
             $account['email'] = $request->email;
-            $account['password'] = bcrypt($request->password);
+            if($request->password) $account['password'] = bcrypt($request->password);
     
             if($unit_id > 2){
                 $student['nisn'] = $request->nisn;
@@ -595,8 +618,6 @@ class AdminController extends Controller
             }
         }elseif($request->role == 'guru'){
             $rules = [
-                'username' => 'required|alpha_dash|unique:users',
-                'email' => 'required|email|unique:users',
                 'name' => 'required|max:100',
                 'gender' => 'required',
                 'birthday_at' => 'required|max:255',
@@ -631,8 +652,14 @@ class AdminController extends Controller
             if($request->segment(5) == 'add'){
                 $rules['photo'] = 'required|image';
                 $rules['password'] = 'required';
+
+                $rules['username'] = 'required|alpha_dash|unique:users';
+                $rules['email'] = 'required|email|unique:users';
             }else{
                 $rules['photo'] = 'image';
+
+                $rules['username'] = 'required|alpha_dash|unique:users,username,' . $request->id;
+                $rules['email'] = 'required|email|unique:users,email,' . $request->id;
             }
             
             $validation = Validator::make($request->all(), $rules, $message);
@@ -644,14 +671,14 @@ class AdminController extends Controller
             #Tahun Ajaran
             $request->year_id = 1;
 
-            $id = rand(1, 999999) . time() . rand(0, 100);
+            $request->id ? $id = $request->id : $id = rand(1, 999999) . time() . rand(0, 100);
 
             $account['id'] = $id;
             $account['role_id'] = get_role($request->role);
             $account['unit_id'] = $unit_id;
             $account['username'] = $request->username;
             $account['email'] = $request->email;
-            $account['password'] = bcrypt($request->password);
+            if($request->password) $account['password'] = bcrypt($request->password);
 
             $teacher['user_id'] = $id;
             $teacher['status_id'] = get_status('active');
@@ -683,8 +710,6 @@ class AdminController extends Controller
             }
         }else{
             $rules = [
-                'username' => 'required|alpha_dash|unique:users',
-                'email' => 'required|email|unique:users',
                 'name' => 'required|max:100',
                 'gender' => 'required',
                 'birthday_at' => 'required|max:255',
@@ -719,8 +744,14 @@ class AdminController extends Controller
             if($request->segment(5) == 'add'){
                 $rules['photo'] = 'required|image';
                 $rules['password'] = 'required';
+
+                $rules['username'] = 'required|alpha_dash|unique:users,username';
+                $rules['email'] = 'required|email|unique:users,email';
             }else{
                 $rules['photo'] = 'image';
+
+                $rules['username'] = 'required|alpha_dash|unique:users,username,' . $request->id;
+                $rules['email'] = 'required|email|unique:users,email,' . $request->id;
             }
             
             $validation = Validator::make($request->all(), $rules, $message);
@@ -732,14 +763,14 @@ class AdminController extends Controller
             #Tahun Ajaran
             $request->year_id = 1;
 
-            $id = rand(1, 999999) . time() . rand(0, 100);
+            $request->id ? $id = $request->id : $id = rand(1, 999999) . time() . rand(0, 100);
 
             $account['id'] = $id;
             $account['role_id'] = get_role($request->role);
             $account['unit_id'] = $unit_id;
             $account['username'] = $request->username;
             $account['email'] = $request->email;
-            $account['password'] = bcrypt($request->password);
+            if($request->password) $account['password'] = bcrypt($request->password);
 
             $staff['user_id'] = $id;
             $staff['status_id'] = get_status('active');
@@ -771,7 +802,40 @@ class AdminController extends Controller
             }
         }
 
-        return redirect(route('admin.users.academic', [$request->segment(3), $request->segment(4)]));
+        if($request->segment(5) == 'add'){
+            return redirect(route('admin.users.academic', [$request->role, $request->unit]));
+        }else{
+            return redirect(route('admin.users.academic.detail', [$request->role, $request->id]));
+        }
+    }
+    public function users_academic_detail(Request $request)
+    {
+        $user = User::where('id', $request->id)->firstOrFail();
+        return view('admin.dashboard.academic.detail', compact('user'));
+    }
+    public function users_academic_change_status(Request $request)
+    {
+        $user = User::where('id', $request->id)->first();
+        $status = $user->student->status_id ?? $user->teacher->status_id ?? $user->staff->status_id;
+
+        $status == 1 ? $change_to = 2 : $change_to = 1;
+
+        if($user->student){
+            $update = Student::where('user_id', $request->id)->update(['status_id' => $change_to]);
+        }elseif($user->teacher){
+            $update = Teacher::where('user_id', $request->id)->update(['status_id' => $change_to]);
+        }else{
+            $update = Staff::where('user_id', $request->id)->update(['status_id' => $change_to]);
+        }
+
+        return response()->json([
+            'success' => true
+        ]);
+    }
+    public function users_academic_delete(Request $request)
+    {
+        $user = User::where('id', $request->id)->delete();
+        return redirect(route('admin.users.academic', [$request->role, 'semua']));
     }
     public function setting()
     {
@@ -883,6 +947,58 @@ class AdminController extends Controller
         Student::where('year_id', $request->id)->update(['year_id' => 1]);
         MoreSetting::where('year_id', $request->id)->update(['year_id' => 1]);
         Year::where('id', $request->id)->delete();
+
+        return back();
+    }
+    public function recruitment()
+    {
+        return view('admin.dashboard.recruitment.index');
+    }
+    public function recruitment_detail(Request $request)
+    {
+        $user = $request->role == 'guru' ? Teacher::where('user_id', $request->id)->first() : ($request->role == 'staff' ? Staff::where('user_id', $request->id)->first() : Student::where('user_id', $request->id)->first());
+        $year = Year::all();
+        
+        if(!$user OR $user->status_id != get_status('recruitment') OR $user->recruitment->step != 4) abort(404);
+
+        return view('admin.dashboard.recruitment.detail', compact('user', 'year'));
+    }
+    public function recruitment_prosess(Request $request)
+    {
+        Recruitment::where('user_id', $request->id)->update(['result' => $request->result]);
+
+        Session::flash('success','Berhasil mengubah status pendaftaran');
+        return back();
+    }
+    public function recruitment_setting()
+    {
+        $setting = RecruitmentSetting::get();
+        return view('admin.dashboard.recruitment.setting', compact('setting'));
+    }
+    public function recruitment_setting_prosess(Request $request)
+    {
+        $unit1 = $request->ppdb_1 ? 1 : 0;
+        $unit2 = $request->ppdb_2 ? 1 : 0;
+        $unit3 = $request->ppdb_3 ? 1 : 0;
+        $unit4 = $request->ppdb_4 ? 1 : 0;
+
+        RecruitmentSetting::where('unit_id', 1)->update(['active' => $unit1]);
+        RecruitmentSetting::where('unit_id', 2)->update(['active' => $unit2]);
+        RecruitmentSetting::where('unit_id', 3)->update(['active' => $unit3]);
+        RecruitmentSetting::where('unit_id', 4)->update(['active' => $unit4]);
+        return back();
+    }
+    public function recruitment_reset(Request $request)
+    {
+        $tidak_lolos = Recruitment::where('result', '!=', 1)->get();
+        foreach($tidak_lolos as $item){
+            User::where('id', $item->user_id)->delete();
+        }
+
+        Recruitment::whereNotNull('user_id')->delete();
+        RecruitmentEmailVerification::whereNotNull('id')->delete();
+
+        Session::flash('success', 'Berhasil mereset data penerimaan');
 
         return back();
     }

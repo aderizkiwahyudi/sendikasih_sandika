@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Classroom;
 use App\Models\Role;
 use App\Models\Status;
 use App\Models\Unit;
@@ -45,19 +46,30 @@ function unit_name($id)
     }
 
     $unit = Unit::where('id', $id)->first();
-    return ucwords($unit->name);
+    return ucwords($unit->name ?? '');
 }
 
 function get_role($id)
 {
     $eng = ['admin' => 'admin','siswa' => 'student', 'guru' => 'teacher', 'staff' => 'staff'];
     $role = Role::where('name', $eng[$id])->first();
-    return $role->id;
+    return $role->id ?? '';
 }
 
 function get_status($name){
-    $status = Status::where('name', $name)->first();
-    return $status->id;
+    if(is_string($name)){
+        $status = Status::where('name', $name)->first();
+        return $status->id ?? '';
+    }
+
+    $status = Status::where('id', $name)->first();
+    $status->name == 'active' ? $status->name = 'aktif' : ($status->name == 'nonactive' ? $status->name = 'nonaktif' : $status->name = 'recruitment');
+    return $status->name ?? '';
+}
+
+function get_classroom($id){
+    $classroom = Classroom::where('id', $id)->first();
+    return $classroom->name ?? '';
 }
 
 function file_upload($file)
