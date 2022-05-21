@@ -29,7 +29,7 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="card-header d-flex align-items-center justify-content-between">
-                            <h4>TAMBAH DATA {{ strtoupper(Request::segment(3)) }}</h4>
+                            <h4>{{ Request::segment(5) == 'edit' ? 'EDIT' : 'TAMBAH' }} DATA {{ strtoupper(Request::segment(3)) }}</h4>
                             <div>
                                
                             </div>

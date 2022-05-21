@@ -4,7 +4,7 @@
         <div class="d-flex align-items-center justify-content-between">
             <div class="logo">
                 <a href="/">
-                    <img src="{{ asset('img/logo.png') }}" alt="Logo" width="120px"/>
+                    <img src="{{ asset('img/logo-white.png') }}" alt="Logo" width="110px"/>
                 </a>
             </div>
             <a href="javascript:void(0)" class="bars"><i class="bi bi-list"></i></a>
@@ -89,5 +89,14 @@
             $('.background-navigation').hide();
         }, 350);
     })
+
+    $(window).scroll(function(){
+        let scroll = $(this).scrollTop();
+        if(scroll > 100){
+            $('header').addClass('header-fixed header-fixed-remove');
+        }else if(scroll < 100){
+            $('header').removeClass('header-fixed');
+        }
+    });
 </script>
 @endpush

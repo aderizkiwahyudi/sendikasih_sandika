@@ -17,7 +17,7 @@
         
             <x-app-admin-navigation></x-app-admin-navigation>
             
-            <div class="content">
+            <div class="content content-editor">
                 <form method="post" enctype="multipart/form-data">
                     <input type="hidden" name="_token" id="csrf" value="{{ csrf_token() }}"/>
                     <div class="form-group form-header mb-4">

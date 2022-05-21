@@ -77,12 +77,10 @@ class AcademicController extends Controller
         
         #Ambil Tahun Pelajaran Sekarang
         $setting = MoreSetting::first();
-
-        if($request->query('t')){
-            if($check = Year::where('id', $request->query('t'))->first()){
-                $yearNow = $check; 
-            }
-        }
+        
+        $year = Year::where('id', $request->query('t') ?? $setting->year_id)->first();
+        $semester = $year->status;
+        $yearNow = $year->id;
 
         $contributions = Contribution::get();
         foreach($contributions as $i => $contribution){
@@ -91,11 +89,11 @@ class AcademicController extends Controller
             }
         }
 
-        return view('academic.finance', compact('contributions', 'years', 'yearNow'));
+        return view('academic.finance', compact('contributions', 'years', 'yearNow', 'semester'));
     }
     public function finance_filter(Request $request)
     {
-        $tahun = Year::where('name', 'like', '%' . $request->tahun . '%')->where('status', 'like', '%' . $request->status . '%')->first();
+        $tahun = Year::where('name', 'like', '%' . $request->tahun . '%')->where('status', 'like', '%' . $request->status . '%')->firstOrFail();
         return redirect(url('akademik/keuangan-pribadi?t=' . $tahun->id));
     }
     public function logout()

@@ -38,7 +38,7 @@ class LoginController extends Controller
         $user = User::where('email', $request->username)
                     ->orWhere('username', $request->username)
                     ->first();
-        
+
         if(!$user){
             Session::flash('failed', 'Akun tidak ditemukan, silakan coba lagi.');
             return back();
@@ -47,6 +47,10 @@ class LoginController extends Controller
         if(password_verify($request->password, $user->password)){
             $status = $user->student->status_id ?? $user->teacher->status_id ?? $user->staff->status_id;
             if($status == 3){
+                if(!$user->recruitment->verify_at){
+                    Session::flash('failed', 'Anda belum melakukan aktivasi, silakan periksa email anda untuk melakukan aktivasi akun. Silakan cek spam jika tidak menemukan email atau anda bisa meminta kirim ulang email <a href="'.route('recruitment.email.resend').'">disini</a>');
+                    return back();
+                }
                 Auth::guard('recruitment')->login($user);
                 return redirect(route('recruitment.dashboard'));
             }elseif($status == 1){

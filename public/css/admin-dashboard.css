@@ -251,3 +251,61 @@ table tr td {
     padding:0;
     border: 0;
 }
+.btn-submenu {
+    display: none;
+}
+@media screen and (max-width:756px) {
+    aside {
+        display: none;
+    }
+    .navigation {
+        height: fit-content !important;
+        position: fixed;
+        top:0;
+        left: 0;
+        width: 100%;
+        animation: none !important;
+    }
+    .btn-submenu {
+        display: block;
+    }
+    main {
+        position: relative !important;
+        width: 100%;
+    }
+    .content .photo-user {
+        width: 50%;
+        margin-bottom: 20px;
+    }
+    .button-edit-delete .btn {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+    main {
+        margin-top: 50px;
+    }
+    main .content-editor {
+        margin-top: 75px;
+    }
+    main .content .card-body {
+        overflow-x: auto;
+    }
+    main .content .card-body table .btn {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    /* main .content .card-body #table_wrapper {
+        min-width: 700px;
+    } */
+    aside {
+        width: 100%;
+        background: #fff;
+        z-index: 10;
+    }
+    aside .header {
+        display: none;
+    }
+    aside .menus {
+        max-height: 100vh;
+    }
+}

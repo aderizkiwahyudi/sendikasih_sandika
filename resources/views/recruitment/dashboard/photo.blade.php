@@ -57,7 +57,7 @@
                     @csrf
                     <div class="main-form">
                         <div class="alert alert-warning">
-                            <strong>Perhatian!</strong> Gunakan ukuran foto 384px x 576px
+                            <strong>Perhatian!</strong> Disarankan menggunakan ukuran foto 3x4
                         </div>
                         @if ($errors->any())
                             <div class="alert alert-danger mt-4 alert-dismissible fade show" role="alert">

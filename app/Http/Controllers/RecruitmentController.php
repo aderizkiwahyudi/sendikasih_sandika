@@ -17,6 +17,11 @@ class RecruitmentController extends Controller
 {
     public function index()
     {
+        $status = Auth::guard('recruitment')->user()->student->status_id ?? Auth::guard('recruitment')->user()->teacher->status_id ?? Auth::guard('recruitment')->user()->staff->status_id;
+        if($status != get_status('recruitment')){
+            return redirect(route('recruitment.logout'));
+        }
+        
         if(Auth::guard('recruitment')->user()->recruitment->step == 4){
             return redirect(route('recruitment.finish'));
         }
@@ -251,7 +256,7 @@ class RecruitmentController extends Controller
         }
         
         $rules = [
-            'photo' => 'required|image|dimensions:width=384,height=576',
+            'photo' => 'required|image',
         ];
 
         $message = [

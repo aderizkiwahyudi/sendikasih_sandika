@@ -70,7 +70,7 @@
         <h4>ORANG TUA</h4>
         <div class="form-group row align-items-center mb-4">
             <div class="col-md-2">Nama & Pekerjaan Ayah <small class="text-danger">*</small></div>
-            <div class="col-md-4"><input type="text" name="father_name" id="father_name" value="{{ old('father_name', Auth::guard('recruitment')->user()->student->father_job) }}" placeholder="Masukan nama ayah " class="form-control"></div>
+            <div class="col-md-4"><input type="text" name="father_name" id="father_name" value="{{ old('father_name', Auth::guard('recruitment')->user()->student->father_name) }}" placeholder="Masukan nama ayah " class="form-control"></div>
             <div class="col-md-4"><input type="text" name="father_job" id="father_job" value="{{ old('father_job', Auth::guard('recruitment')->user()->student->father_job) }}" placeholder="Masukan pekerjaan ayah " class="form-control"></div>
         </div>
         <div class="form-group row align-items-center mb-4">
@@ -80,7 +80,7 @@
         </div>
         <div class="form-group row align-items-center mb-4">
             <div class="col-md-2">Alamat Orang Tua <small class="text-danger">*</small></div>
-            <div class="col-md-4"><textarea name="parents_address" id="parents_address" rows="5" placeholder="Masukan alamat asal sekolah " class="form-control">{{ old('parents_address', Auth::guard('recruitment')->user()->student->parents_address) }}</textarea></div>
+            <div class="col-md-4"><textarea name="parents_address" id="parents_address" rows="5" placeholder="Masukan alamat orang tua" class="form-control">{{ old('parents_address', Auth::guard('recruitment')->user()->student->parents_address) }}</textarea></div>
         </div>
         <div class="form-group row align-items-center mb-4">
             <div class="col-md-2">No. Handphone <small class="text-danger">*</small></div>

@@ -180,7 +180,7 @@ class RegistrationController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Berhasil melakukan pendaftaran, silakan periksa email anda untuk melakukan aktivasi akun.',
+            'message' => 'Berhasil melakukan pendaftaran, silakan periksa email anda untuk melakukan aktivasi akun. Silakan cek spam jika tidak menemukan email atau anda bisa meminta kirim ulang email <a href="'.route('recruitment.email.resend').'">disini</a>',
         ]);
     }
 

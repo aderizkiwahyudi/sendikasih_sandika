@@ -85,16 +85,19 @@
                     </li>
                 </ul>
             </li>
-            <li class="sub">
-                <a href="#"><i class="bi bi-wallet me-2"></i> PEMBAYARAN</a>
+            <li class="sub {{  Request::segment(2) == 'biaya' ? 'active' : '' }}">
+                <a href="#"><i class="bi bi-wallet me-2"></i> JENIS BIAYA</a>
                 <ul class="submenus">
                     @foreach ($contributions as $item)
-                        <li>
-                            <a href="#contributions/id">{{ strtoupper($item->name) }}</a>
+                        <li class="{{ Request::segment(2) == 'biaya' && Request::segment(3) == $item->id ? 'active' : '' }}">
+                            <a href="{{ route('admin.contribution', $item->id) }}">{{ strtoupper($item->name) }}</a>
                         </li>
                     @endforeach
                 </ul>
             </li>
+            {{-- <li class="sub {{  Request::segment(2) == 'pembayaran' ? 'active' : '' }}">
+                <a href="{{ route('admin.payment') }}"><i class="bi bi-wallet-fill me-2"></i> PEMBAYARAN</a>
+            </li> --}}
             <div class="menu-name">PPDB & PPDP</div>
             <li class="sub {{  Request::segment(2) == 'pendaftaran' && Request::segment(3) == 'ppdb' || Request::segment(3) == 'ppdp' ? 'active' : '' }}">
                 <a href="#"><i class="bi bi-person me-2"></i> PESERTA DIDIK</a>
@@ -107,7 +110,7 @@
                     </li>
                 </ul>
             </li>
-            <li class="sub {{  Request::segment(2) == 'pendaftaran' && Request::segment(3) == 'guru' || Request::segment(3) == 'staff' ? 'active' : '' }}">
+            <li class="sub {{  Request::segment(2) == 'pendaftaran' && (Request::segment(3) == 'guru' || Request::segment(3) == 'staff') ? 'active' : '' }}">
                 <a href="#"><i class="bi bi-person me-2"></i> GURU & STAFF</a>
                 <ul class="submenus">
                     <li class="{{  Request::segment(2) == 'pendaftaran' && Request::segment(3) == 'guru' ? 'active' : '' }}">
@@ -118,11 +121,18 @@
                     </li>
                 </ul>
             </li>
-            <li class="{{ Request::segment(2) =='setting' ? 'active' : '' }}">
+            <li class="{{ Request::segment(2) =='pendaftaran' && Request::segment(3) =='pengaturan' ? 'active' : '' }}">
                 <a href="{{ route('admin.recruitment.setting') }}"><i class="bi bi-gear me-2"></i> PENGATURAN</a>
             </li>
+            <div class="menu-name">WEBSITE</div>
+            <li class="{{ Request::segment(2) =='website' ? 'active' : '' }}">
+                <a href="{{ route('admin.website.setting') }}"><i class="bi bi-globe me-2"></i> PENGATURAN WEBSITE</a>
+            </li>
+            <li class="{{ Request::segment(2) =='slides' ? 'active' : '' }}">
+                <a href="{{ route('admin.website.slide') }}"><i class="bi bi-images me-2"></i> SLIDE</a>
+            </li>
             <div class="menu-name">AKUN</div>
-            <li class="{{ Request::segment(2) =='setting' ? 'active' : '' }}">
+            <li class="{{ Request::segment(2) =='pengaturan' ? 'active' : '' }}">
                 <a href="{{ route('admin.setting') }}"><i class="bi bi-gear me-2"></i> PENGATURAN</a>
             </li>
             <li>
@@ -131,3 +141,10 @@
         </ul>
     </div>
 </aside>
+
+@push('script')
+    <script>
+        const active = $('.menus').find('.active').offset();
+        $('.menus').scrollTop(active.top - 200);
+    </script>
+@endpush

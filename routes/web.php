@@ -45,7 +45,7 @@ Route::post('reset-password', [LoginController::class, 'reset_password_prosess']
 Route::get('reset-password-user', [LoginController::class, 'set_new_password'])->name('set_new_password');
 Route::post('reset-password-user', [LoginController::class, 'set_new_password_prosess'])->name('set_new_password.proses');
 
-Route::get('pendaftaran/resend', [RegistrationController::class, 'resend']);
+Route::get('pendaftaran/resend', [RegistrationController::class, 'resend'])->name('recruitment.email.resend');
 Route::post('pendaftaran/resend', [RegistrationController::class, 'resend_prosess']);
 
 Route::get('pendaftaran/{slug}', RegistrationController::class);
@@ -132,7 +132,7 @@ Route::prefix('administrator')->group(function(){
         Route::get('user/{role}/{unit}', [AdminController::class, 'users_academic'])->name('admin.users.academic');
         Route::get('user/{role}/{unit}/add', [AdminController::class, 'users_academic_add'])->name('admin.users.academic.add');
         Route::post('user/{role}/{unit}/add', [AdminController::class, 'users_academic_prosess'])->name('admin.users.academic.add.prosess');
-        Route::get('user/{role}/{id}/detail', [AdminController::class, 'users_academic_detail'])->name('admin.users.academic.detail');
+        Route::get('user/{role}/{id}/{page}', [AdminController::class, 'users_academic_detail'])->name('admin.users.academic.detail');
         Route::get('user/{role}/{id}/edit/{unit_id}', [AdminController::class, 'users_academic_edit'])->name('admin.users.academic.edit');
         Route::post('user/{role}/{id}/edit/{unit_id}', [AdminController::class, 'users_academic_prosess'])->name('admin.users.academic.edit.prosess');
         Route::get('user/{role}/{id}/delete', [AdminController::class, 'users_academic_delete'])->name('admin.users.academic.delete');
@@ -156,6 +156,31 @@ Route::prefix('administrator')->group(function(){
         Route::get('pendaftaran/{role}/detail/{id}', [AdminController::class, 'recruitment_detail'])->name('admin.recruitment.detail');
         Route::post('pendaftaran/{role}/detail/{id}', [AdminController::class, 'recruitment_prosess'])->name('admin.recruitment.prosess');
 
+        #Menambahkan Pembayaran ke Siswa
+        Route::get('biaya/pembayaran/delete/{id}', [AdminController::class, 'contribution_payment_delete'])->name('admin.contribution.payment.delete');
+        Route::post('biaya/pembayaran/edit/{id}', [AdminController::class, 'contribution_payment_edit'])->name('admin.contribution.payment.edit');
+        Route::get('biaya/pembayaran/{id}', [AdminController::class, 'contribution_payment'])->name('admin.contribution.payment');
+        Route::post('biaya/pembayaran/{id}', [AdminController::class, 'contribution_payment_prosess'])->name('admin.contribution.payment.prosess');
+        
+        Route::get('biaya/{id}', [AdminController::class, 'contribution'])->name('admin.contribution');
+        Route::post('biaya/{id}', [AdminController::class, 'contribution_prosess'])->name('admin.contribution.prosess');
+        Route::post('biaya/{id}/filter', [AdminController::class, 'contribution_filter'])->name('admin.contribution.filter');
+        Route::post('biaya/{id}/{item_id}', [AdminController::class, 'contribution_prosess'])->name('admin.contribution.edit');
+        Route::get('biaya/{id}/delete', [AdminController::class, 'contribution_delete'])->name('admin.contribution.delete');
+
+        // Route::get('pembayaran', [AdminController::class, 'payment_contribution'])->name('admin.payment');
+
+        Route::get('website/setting', [AdminController::class, 'website_setting'])->name('admin.website.setting');
+        Route::post('website/setting', [AdminController::class, 'website_setting_prosess'])->name('admin.website.setting.proses');
+        
+        Route::get('slides', [AdminController::class, 'website_slide'])->name('admin.website.slide');
+        Route::get('slides/add', [AdminController::class, 'website_slide_add'])->name('admin.website.slide.add');
+        Route::get('slides/edit/{id}', [AdminController::class, 'website_slide_edit'])->name('admin.website.slide.edit');
+        Route::get('slides/delete/{id}', [AdminController::class, 'website_slide_delete'])->name('admin.website.slide.delete');
+        
+        Route::post('slides/add', [AdminController::class, 'website_slide_prosess'])->name('admin.website.slide.add.proses');
+        Route::post('slides/edit/{id}', [AdminController::class, 'website_slide_prosess'])->name('admin.website.slide.edit');
+        
         Route::get('pengaturan', [AdminController::class, 'setting'])->name('admin.setting');
         Route::post('pengaturan', [AdminController::class, 'setting_prosess'])->name('admin.setting');
 
@@ -172,6 +197,12 @@ Route::prefix('administrator')->group(function(){
         Route::get('data/kelas/{unit}', [DataController::class, 'classroom'])->name('admin.classroom.data');
         Route::get('data/year', [DataController::class, 'year'])->name('admin.year.data');
         Route::get('data/recruitment', [DataController::class, 'recruitment'])->name('admin.recruitment.data');
+        Route::get('data/contribution/payment/{id}', [DataController::class, 'contribution_payment'])->name('admin.data.student.payment.contribution');
+        Route::get('data/contribution/{id}', [DataController::class, 'contribution'])->name('admin.contribution.data');
+
+        Route::get('data/user_search/active', [DataController::class, 'users_active'])->name('admin.users.search.active.data');
+
+        Route::get('data/slides', [DataController::class, 'slides'])->name('admin.slides');
 
         #CKEDITOR
         Route::post('ckeditor/upload/image', Ckeditor::class);

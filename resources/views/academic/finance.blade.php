@@ -32,14 +32,14 @@
                                         <div class="col-md-4">
                                             <select name="tahun" class="form-control">
                                                 @foreach ($years as $item)
-                                                    <option value="{{ $item->name }}" {{ $item->id == $yearNow->year->id ?? $yearNow->id ? 'selected' : '' }}>{{ $item->name }}</option>
+                                                    <option value="{{ $item->name }}" {{ $item->id == $yearNow ? 'selected' : '' }}>{{ $item->name }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
                                         <div class="col-md-4">
                                             <select name="status" class="form-control">
-                                                <option value="ganjil" {{ strtolower($yearNow->year->status ?? $yearNow->status) == 'ganjil' ? 'selected' : '' }}>Semester Ganjil</option>
-                                                <option value="genap" {{ strtolower($yearNow->year->status ?? $yearNow->status) == 'genap' ? 'selected' : '' }}>Semester Genap</option>
+                                                <option value="ganjil" {{ strtolower($semester) == 'ganjil' ? 'selected' : '' }}>Semester Ganjil</option>
+                                                <option value="genap" {{ strtolower($semester) == 'genap' ? 'selected' : '' }}>Semester Genap</option>
                                             </select>
                                         </div>
                                         <div class="col-md-2">
@@ -49,7 +49,7 @@
                                 </form>
                             </div>
                             <div class="col-md-12">
-                                @foreach ($contributions as $contribution)
+                                @foreach ($contributions as $key => $contribution)
                                     <div class="box shadow-sm mb-4 border">
                                         <h5 class="mb-0">{{ $contribution->name }}</h5>
                                         <small>{{ $contribution->description }}</small>
@@ -66,13 +66,21 @@
                                             </thead>
                                             <tbody>
                                                 <?php
-                                                    $year_id = $yearNow->year->id ?? $yearNow->id;
+                                                    $year_id = $yearNow;
                                                     $contributionOnYear = $contribution->item->filter(function($val, $key) use ($year_id){
                                                         return $val['year_id'] == $year_id;
                                                     });
+
+                                                    #Pembayaran PPDB Hanya muncul satu kali ditahun pertama
+                                                    if($key == 0){
+                                                        $contributionOnYear = $contribution->item->filter(function($val){
+                                                            return $val['year_id'] == Auth::guard('academic')->user()->student->year_id;
+                                                        });
+                                                    }
+
                                                     $lunas = 0;
                                                 ?>
-                                                @forelse ($contributionOnYear as $i => $item)
+                                                @forelse ($contributionOnYear->values() as $i => $item)
                                                     <?php
                                                         $sum = 0;
                                                         foreach ($item->payment as $key => $payment) {
@@ -88,7 +96,7 @@
                                                         <td class="text-center">Rp{{ number_format($item->nominal,0,'.','.') }}</td>
                                                         <td>Rp{{ number_format($sum,0,'.','.') }}</td>
                                                         <td class="text-center">
-                                                                {!! $item->nominal == $sum ? '<small class="text-success">Lunas</small>' : '<small class="text-danger">Belum Lunas</small>'; !!}
+                                                                {!! $item->nominal >= $sum ? '<small class="text-success">Lunas</small>' : '<small class="text-danger">Belum Lunas</small>'; !!}
                                                         </td>
                                                     </tr>
                                                 @empty
@@ -101,7 +109,7 @@
                                                 <tr>
                                                     <td colspan="4">Status Keseluruhan</td>
                                                     <td colspan="2" class="text-end">
-                                                        {!! count($contribution->item) == 0 ? '-' : (count($contribution->item) == $lunas ? '<small class="text-success">Lunas</small>' : '<small class="text-danger">Belum Lunas</small>'); !!}
+                                                        {!! count($contributionOnYear) == 0 ? '-' : (count($contributionOnYear) == $lunas ? '<small class="text-success">Lunas</small>' : '<small class="text-danger">Belum Lunas</small>'); !!}
                                                     </td>
                                                 </tr>
                                             </tfoot>

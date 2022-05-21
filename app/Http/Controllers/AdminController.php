@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Classroom;
+use App\Models\Contribution;
 use App\Models\ContributionItem;
 use App\Models\Gallery;
 use App\Models\GalleryPhoto;
@@ -14,8 +15,10 @@ use App\Models\PageFile;
 use App\Models\Recruitment;
 use App\Models\RecruitmentEmailVerification;
 use App\Models\RecruitmentSetting;
+use App\Models\Slide;
 use App\Models\Staff;
 use App\Models\Student;
+use App\Models\StudentPaymentContribution;
 use App\Models\Teacher;
 use App\Models\UnitNameStructure;
 use App\Models\UnitStructureItem;
@@ -38,7 +41,25 @@ class AdminController extends Controller
 
     public function index()
     {
-        return view('admin.dashboard.index');
+        $year = MoreSetting::first()->year;
+
+        $student = Student::where('students.status_id', get_status('active'))->join('users', 'users.id', '=', 'students.user_id')->get();
+        $teacher = Teacher::where('teachers.status_id', get_status('active'))->join('users', 'users.id', '=', 'teachers.user_id')->get();
+        $staff = Staff::where('staff.status_id', get_status('active'))->join('users', 'users.id', '=', 'staff.user_id')->get();
+        
+        $ppdb = Recruitment::where('users.role_id', 2)->join('users', 'users.id', '=', 'recruitment.user_id')->get(); 
+        $penerimaan_guru_staff = Recruitment::where('users.role_id', '!=', 2)->join('users', 'users.id', '=', 'recruitment.user_id')->get();
+
+        if($this->unit_id > 1){
+            $student = Student::where('students.status_id', get_status('active'))->where('users.unit_id', $this->unit_id)->join('users', 'users.id', '=', 'students.user_id')->get();
+            $teacher = Teacher::where('teachers.status_id', get_status('active'))->where('users.unit_id', $this->unit_id)->join('users', 'users.id', '=', 'teachers.user_id')->get();
+            $staff = Staff::where('staff.status_id', get_status('active'))->where('users.unit_id', $this->unit_id)->join('users', 'users.id', '=', 'staff.user_id')->get();
+            
+            $ppdb = Recruitment::where('users.role_id',2)->where('users.unit_id', $this->unit_id)->join('users', 'users.id', '=', 'recruitment.user_id')->get(); 
+            $penerimaan_guru_staff = Recruitment::where('users.role_id', '!=', 2)->where('users.unit_id', $this->unit_id)->join('users', 'users.id', '=', 'recruitment.user_id')->get();
+        }
+        
+        return view('admin.dashboard.index', compact('student', 'teacher', 'staff', 'year', 'ppdb', 'penerimaan_guru_staff'));
     }
     public function news()
     {
@@ -810,8 +831,36 @@ class AdminController extends Controller
     }
     public function users_academic_detail(Request $request)
     {
-        $user = User::where('id', $request->id)->firstOrFail();
-        return view('admin.dashboard.academic.detail', compact('user'));
+        $user = Student::where('user_id', $request->id) ?? Teacher::where('user_id', $request->id) ?? Staff::where('user_id', $request->id);
+        $user = $user->firstOrFail();
+
+        $class = Classroom::all();
+        $year = Year::where('id', '>', 1)->groupBy('name')->get();
+
+        $year_id = MoreSetting::first()->year_id;
+        $semester = Year::where('id', $year_id)->firstOrFail()->status;
+
+        $yearNow = MoreSetting::first()->year->name;
+
+        if($request->query('tahun') && $request->query('status')){
+            $y = Year::where('name', $request->query('tahun'))->where('status', $request->query('status'))->firstOrFail();
+            $year_id = $y->id;
+            $yearNow = $y->name;
+            $semester = $y->status;
+        }
+
+        $contributions = Contribution::all();
+        foreach($contributions as $i => $contribution){
+            foreach($contribution->item as $j => $item){
+                $contributions[$i]->item[$j]->payment = StudentPaymentContribution::where('contribution_item_id', $item->id)->where('user_id', $user->user_id)->get();
+            }
+        }
+
+        if($request->page == 'print'){
+            return view('admin.dashboard.academic.print', compact('user', 'class', 'year', 'contributions', 'yearNow', 'semester', 'year_id'));
+        }
+
+        return view('admin.dashboard.academic.detail', compact('user', 'class', 'year', 'contributions', 'yearNow', 'semester', 'year_id'));
     }
     public function users_academic_change_status(Request $request)
     {
@@ -950,6 +999,90 @@ class AdminController extends Controller
 
         return back();
     }
+    public function contribution(Request $request)
+    {
+        $id = $request->id;
+        $pageName = strtoupper(Contribution::where('id', $request->id)->firstOrFail()->name);
+        $year = Year::where('id', '>', 1)->groupBy('name')->get();
+        
+        $selectYear = $request->query('y') ?? MoreSetting::first()->year_id;
+
+        $yearNow = Year::where('id', $selectYear)->first();
+
+        return view('admin.dashboard.academic.contribution', compact('id', 'pageName', 'year', 'yearNow'));
+    }
+    public function contribution_prosess(Request $request)
+    {
+        $year_id = $request->query('y') ?? MoreSetting::first()->year_id;
+        $contribution_id = $request->id;
+
+        $rules = [
+            'name' => 'required|max:100',
+            'description' => 'required|max:150',
+            'nominal' => 'required',
+            'created_at' => 'required',
+        ];
+
+        $message = [
+            'name.required' => 'Nama tidak boleh kosong',
+            'name.max' => 'Nama terlalu panjang, maksimal 100 Karakter', 
+            'nominal.required' => 'Nominal tidak boleh kosong',
+            'nominal.numeric' => 'Masukan nominal dengan benar',
+            'description.required' => 'Keterangan tidak boleh kosong',
+            'description.max' => 'Keterangan terlalu panjang, maksimal 100 Karakter', 
+        ];
+
+        $validation = Validator::make($request->all(), $rules, $message);
+
+        if($validation->fails()){
+            return back()->withErrors($validation->errors());
+        }
+
+        $request->nominal = str_replace('.', '', $request->nominal);
+
+        if(!$request->segment(4)){
+            $item = new ContributionItem();
+            $item->year_id = $year_id;
+            $item->contribution_id = $contribution_id;
+            $item->name = $request->name;
+            $item->description = $request->description;
+            $item->nominal = $request->nominal;
+            $item->created_at = $request->created_at;
+            $item->save();    
+        }else{
+            $data = [
+                'name' => $request->name, 
+                'description' => $request->description,
+                'nominal' => $request->nominal,
+                'created_at' => $request->created_at,
+            ];
+
+            ContributionItem::where('id', $request->item_id)->update($data);
+        }
+
+        Session::flash('success', 'Berhasil menyimpan data');
+        return back();
+    }
+    public function contribution_filter(Request $request)
+    {
+        $year = Year::where('name', $request->year)->where('status', $request->semester)->first();
+
+        if(!$year){
+            return back()->withErrors(['Tahun akademik tidak ditemukan']);
+        }
+
+        return redirect(route('admin.contribution', [$request->segment(3), "y" => $year->id]));
+    }
+    public function contribution_delete(Request $request)
+    {
+        ContributionItem::where('id', $request->id)->delete();
+        return back();
+    }
+    public function payment_contribution()
+    {
+        $jenis = Contribution::orderBy('id', 'ASC')->get();
+        return view('admin.dashboard.academic.payment', compact('jenis'));
+    }
     public function recruitment()
     {
         return view('admin.dashboard.recruitment.index');
@@ -990,10 +1123,14 @@ class AdminController extends Controller
     }
     public function recruitment_reset(Request $request)
     {
-        $tidak_lolos = Recruitment::where('result', '!=', 1)->get();
+        $tidak_lolos = Recruitment::where('result', '!=', '1')->get();
         foreach($tidak_lolos as $item){
             User::where('id', $item->user_id)->delete();
         }
+
+        Student::where('status_id', get_status('recruitment'))->update(['status_id' => get_status('active')]);
+        Teacher::where('status_id', get_status('recruitment'))->update(['status_id' => get_status('active')]);
+        Staff::where('status_id', get_status('recruitment'))->update(['status_id' => get_status('active')]);
 
         Recruitment::whereNotNull('user_id')->delete();
         RecruitmentEmailVerification::whereNotNull('id')->delete();
@@ -1002,6 +1139,171 @@ class AdminController extends Controller
 
         return back();
     }
+
+    public function contribution_payment(Request $request)
+    {
+        $contribution = ContributionItem::where('id', $request->id)->firstOrFail();
+        return view('admin.dashboard.academic.payment', compact('contribution'));
+    }
+
+    public function contribution_payment_prosess(Request $request)
+    {
+        $rules = [
+            'nisn' => 'required|exists:students',
+            'nominal' => 'required'
+        ];
+
+        $message = [
+            'nisn.required' => 'NISN tidak boleh kosong',
+            'nisn.exists' => 'NISN tidak ditemukan',
+            'nominal.required' => 'Nominal tidak boleh kosong',
+        ];
+
+        $validation = Validator::make($request->all(), $rules, $message);
+
+        if($validation->fails()){
+            return back()->withErrors($validation->errors());
+        }
+
+        $user_id = Student::where('nisn', $request->nisn)->first()->user_id;
+        $nominal = str_replace('.', '', $request->nominal);
+
+        $payment = new StudentPaymentContribution();
+        $payment->contribution_item_id = $request->id;
+        $payment->user_id = $user_id;
+        $payment->nominal = $nominal;
+        $payment->created_at = date('Y-m-d', strtotime($request->created_at));
+        $payment->save();
+
+        Session::flash('success', 'Berhasil menyimpan data');
+        return back();
+    }
+
+    public function contribution_payment_edit(Request $request)
+    {
+        StudentPaymentContribution::where('id', $request->id)->firstOrFail();
+
+        if(!$request->nominal){
+            return back()->withErrors('Nominal tidak boleh kosong');
+        }
+
+        StudentPaymentContribution::where('id', $request->id)->update(['nominal' => $request->nominal, 'created_at' => $request->created_at]);
+
+        Session::flash('success', 'Berhasil menyimpan data');
+        return back();
+    }
+
+    public function contribution_payment_delete(Request $request)
+    {
+        StudentPaymentContribution::where('id', $request->id)->delete();
+        return back();
+    }
+
+    public function website_setting()
+    {
+        $web = MoreSetting::first();
+        $year = Year::groupBy('name')->orderBy('id', 'DESC')->get();
+        return view('admin.dashboard.website.setting', compact('web', 'year'));
+    }
+    public function website_setting_prosess(Request $request)
+    {
+        $rules = [
+            'facebook' => 'required|url',
+            'twitter' => 'required|url',
+            'youtube' => 'required|url',
+            'year' => 'required',
+            'semester' => 'required',
+        ];
+
+        $message = [
+            'facebook.required' => 'Masukan url facebook anda dengan benar',
+            'facebook.url' => 'Masukan url facebook anda dengan benar',
+            'twitter.required' => 'Masukan url twitter anda dengan benar',
+            'twitter.url' => 'Masukan url twitter anda dengan benar',
+            'youtube.required' => 'Masukan url youtube anda dengan benar',
+            'youtube.url' => 'Masukan url youtube anda dengan benar',
+            'year.required' => 'Masukan tahun akademik dengan benar',
+            'semester.required' => 'Masukan semester akademik dengan benar',
+        ];
+
+        $validation = Validator::make($request->all(), $rules, $message);
+
+        if($validation->fails()){
+            return back()->withErrors($validation->errors());
+        }
+
+        $year = Year::where('name', $request->year)->where('status', $request->semester)->first()->id ?? 1;
+
+        MoreSetting::whereNotNull('id')->update([
+            'year_id' => $year,
+            'facebook' => $request->facebook,
+            'twitter' => $request->twitter,
+            'youtube' => $request->youtube,
+        ]);
+
+        return back();
+    }
+    
+    public function website_slide(Request $request)
+    {
+        return view('admin.dashboard.slides.index');
+    }
+
+    public function website_slide_add()
+    {
+        return view('admin.dashboard.slides.add');
+    }
+
+    public function website_slide_edit(Request $request)
+    {
+        $slide = Slide::where('id', $request->id)->firstOrFail();
+        return view('admin.dashboard.slides.add', compact('slide'));
+    }
+
+    public function website_slide_prosess(Request $request)
+    {
+        $rules['photo'] = 'required|image';
+        $rules['description'] = 'required';
+
+        $message['photo.required'] = 'Gambar tidak boleh kosong';
+        $message['photo.image'] = 'File yang diupload harus berupa gambar';
+        $message['description.required'] = 'Keterangan tidak boleh kosong';
+
+        if($request->id){
+            $rules['photo'] = 'image';
+        }
+
+        $validation = Validator::make($request->all(), $rules, $message);
+
+        if($validation->fails()){
+            return back()->withErrors($validation->errors());
+        }
+
+        $image = file_upload($request->file('photo'));
+
+        if(!$request->id){
+            $slide = new Slide();
+            $slide->unit_id = $this->unit_id;
+            $slide->image = $image;
+            $slide->description = $request->description;
+            $slide->save();
+        }else{
+            $request->file('photo') ? $slide['image'] = $image : '';
+            $slide['description'] = $request->description;
+        
+            Slide::where('id', $request->id)->update($slide);
+        }
+
+        Session::flash('success', 'Berhasil menyimpan data');
+        return redirect(route('admin.website.slide'));
+    }
+
+    public function website_slide_delete(Request $request)
+    {
+        Slide::where('id', $request->id)->delete();
+        return back();
+    }
+
     public function logout()
     {
         Auth::guard('admin')->logout();

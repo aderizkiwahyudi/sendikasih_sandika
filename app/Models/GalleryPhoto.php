@@ -9,5 +9,10 @@ class GalleryPhoto extends Model
 {
     use HasFactory;
 
-    protected $table = 'Gallery_photos';
+    protected $table = 'gallery_photos';
+
+    public function gallery()
+    {
+        return $this->belongsTo(Gallery::class);
+    }
 }

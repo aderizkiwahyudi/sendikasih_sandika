@@ -12,12 +12,21 @@
                     $(this).find('.submenus').fadeOut();
                 }
             });
+
+            $('.submenu-mobile').on('click', function(){
+                if($('aside').css('display') == 'block'){
+                    $('aside').hide();
+                }else{
+                    $('aside').show();
+                }
+            });
         })
     </script>
 @endpush
 
 <div class="navigation shadow-sm">
-    <div>
+    <div class="d-flex align-items-center">
+        <div class="btn-submenu me-2"><a href="javascript:void(0)" class="submenu-mobile"><i class="bi bi-list"></i></a></div>
         <a href="{{ route('admin.dashboard') }}">
             <strong>Sendikasih Sandika</strong>
         </a>
@@ -40,7 +49,7 @@
                                 </div>
                             </div>
                             <div class="drowdown-profile-footer border-top d-flex align-items-center justify-content-between">
-                                <a class="dropdown-item" href="{{ route('admin.logout') }}">Pengaturan</a>
+                                <a class="dropdown-item" href="{{ route('admin.setting') }}">Pengaturan</a>
                                 <a class="dropdown-item text-danger" href="{{ route('admin.logout') }}">Keluar</a>
                             </div>
                         </li>

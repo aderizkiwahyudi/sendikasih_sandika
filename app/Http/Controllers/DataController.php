@@ -4,15 +4,20 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Classroom;
+use App\Models\ContributionItem;
 use App\Models\Gallery;
+use App\Models\MoreSetting;
 use App\Models\News;
 use App\Models\PageFile;
 use App\Models\Recruitment;
+use App\Models\Slide;
 use App\Models\Staff;
 use App\Models\Student;
+use App\Models\StudentPaymentContribution;
 use App\Models\Teacher;
 use App\Models\UnitNameStructure;
 use App\Models\UnitStructureItem;
+use App\Models\User;
 use App\Models\Year;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
@@ -33,7 +38,7 @@ class DataController extends Controller
                         ->addColumn('action', function($categories){
                             return 
                             '<a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#edit-kategori-'. $categories->id .'" class="btn btn-sm btn-primary me-2"><i class="bi bi-pencil-square"></i> Edit</a>' .
-                            '<a href="'.route('admin.category.delete', $categories->id).'" class="btn btn-sm btn-danger" onclick="return confirm(`Hapus Kategori?`)" <i class="bi bi-trash"></i> Hapus</a>' .
+                            '<a href="'.route('admin.category.delete', $categories->id).'" class="btn btn-sm btn-danger" onclick="return confirm(`Hapus Kategori?`)"><i class="bi bi-trash"></i> Hapus</a>' .
                             '
                             <div class="modal fade text-dark" id="edit-kategori-'. $categories->id .'" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
@@ -41,7 +46,7 @@ class DataController extends Controller
                                         <form method="post" action="'. route('admin.category.edit.prosess', $categories->id) .'">
                                             <input disabled type="hidden" name="_token" value="'. csrf_token() .'"/>
                                             <div class="modal-header">
-                                                <h5 class="modal-title">Tambah Kategori</h5>
+                                                <h5 class="modal-title">Edit Kategori</h5>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body">
@@ -73,7 +78,7 @@ class DataController extends Controller
                ->addColumn('action', function ($news) {
                     return 
                     '<a href="'.route('admin.news.edit', $news->id).'" class="btn btn-sm btn-primary me-2"><i class="bi bi-pencil-square"></i> Edit</a>' .
-                    '<a href="'.route('admin.news.delete', $news->id).'" class="btn btn-sm btn-danger" onclick="return confirm(`Hapus Berita?`)" <i class="bi bi-trash"></i> Hapus</a>';
+                    '<a href="'.route('admin.news.delete', $news->id).'" class="btn btn-sm btn-danger" onclick="return confirm(`Hapus Berita?`)"> <i class="bi bi-trash"></i> Hapus</a>';
                })
                ->make(true);
     }
@@ -89,7 +94,7 @@ class DataController extends Controller
                         ->addColumn('action', function($files) use ($request){
                             return 
                             '<a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#edit-page-'. $files->id .'" class="btn btn-sm btn-primary me-2"><i class="bi bi-pencil-square"></i> Edit</a>' .
-                            '<a href="'.route('admin.pages.file.delete', [$request->slug, $files->id]).'" class="btn btn-sm btn-danger" onclick="return confirm(`Hapus Data?`)" <i class="bi bi-trash"></i> Hapus</a>' .
+                            '<a href="'.route('admin.pages.file.delete', [$request->slug, $files->id]).'" class="btn btn-sm btn-danger" onclick="return confirm(`Hapus Data?`)"> <i class="bi bi-trash"></i> Hapus</a>' .
                             '
                             <div class="modal fade text-dark" id="edit-page-'. $files->id .'" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
                             <div class="modal-dialog" role="document">
@@ -145,7 +150,7 @@ class DataController extends Controller
                         ->addColumn('action', function($structures) use ($request){
                             return 
                             '<a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#edit-page-'. $structures->id .'" class="btn btn-sm btn-primary me-2"><i class="bi bi-pencil-square"></i> Edit</a>' .
-                            '<a href="'.route('admin.structures.delete', $structures->id).'" class="btn btn-sm btn-danger" onclick="return confirm(`Hapus Data?`)" <i class="bi bi-trash"></i> Hapus</a>' .
+                            '<a href="'.route('admin.structures.delete', $structures->id).'" class="btn btn-sm btn-danger" onclick="return confirm(`Hapus Data?`)"> <i class="bi bi-trash"></i> Hapus</a>' .
                             '
                             <div class="modal fade text-dark" id="edit-page-'. $structures->id .'" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
                             <div class="modal-dialog" role="document">
@@ -186,7 +191,7 @@ class DataController extends Controller
                         ->addColumn('action', function($structure){
                             return 
                             '<a href="javascript:void(0)" class="btn btn-sm btn-primary me-2" data-bs-toggle="modal" data-bs-target="#edit-'.$structure->id.'"><i class="bi bi-pencil-square"></i> Edit</a>' .
-                            '<a href="'.route('admin.structures.item.delete', $structure->id).'" class="btn btn-sm btn-danger" onclick="return confirm(`Hapus Data?`)" <i class="bi bi-trash"></i> Hapus</a>' . 
+                            '<a href="'.route('admin.structures.item.delete', $structure->id).'" class="btn btn-sm btn-danger" onclick="return confirm(`Hapus Data?`)"> <i class="bi bi-trash"></i> Hapus</a>' . 
                             '<div class="modal fade text-dark" id="edit-'.$structure->id.'" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content text-start">
@@ -232,7 +237,7 @@ class DataController extends Controller
                ->addColumn('action', function ($galleries) {
                     return 
                     '<a href="'.route('admin.gallery.edit', $galleries->id).'" class="btn btn-sm btn-primary me-2"><i class="bi bi-pencil-square"></i> Edit</a>' .
-                    '<a href="'.route('admin.gallery.delete', $galleries->id).'" class="btn btn-sm btn-danger" onclick="return confirm(`Hapus Galeri?`)" <i class="bi bi-trash"></i> Hapus</a>';
+                    '<a href="'.route('admin.gallery.delete', $galleries->id).'" class="btn btn-sm btn-danger" onclick="return confirm(`Hapus Galeri?`)"> <i class="bi bi-trash"></i> Hapus</a>';
                })
                ->make(true);
     }
@@ -267,7 +272,7 @@ class DataController extends Controller
                             return ucwords(unit_name($users->account->unit_id));
                         })
                         ->addColumn('action', function($users) use ($request){
-                            return '<a href="'.route('admin.users.academic.detail', [$request->segment(4) , $users->user_id]).'" class="btn btn-sm btn-primary me-2"><i class="bi bi-pencil-square"></i> Edit</a>';
+                            return '<a href="'.route('admin.users.academic.detail', [$request->segment(4) , $users->user_id, 'biodata']).'" class="btn btn-sm btn-primary me-2"><i class="bi bi-pencil-square"></i> Edit</a>';
                         })
                         ->rawColumns(['photo', 'status', 'action'])
                         ->make(true);
@@ -283,7 +288,7 @@ class DataController extends Controller
                         })
                         ->addColumn('action', function($classroom) use ($request){
                             return  '<a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#edit-'.$classroom->id.'" class="btn btn-sm btn-primary me-2"><i class="bi bi-pencil-square"></i> Edit</a>' .
-                                    '<a href="'.route('admin.class.delete', [$request->segment(3), $classroom->id]).'" class="btn btn-sm btn-danger" onclick="return confirm(`Hapus Kelas?`)" <i class="bi bi-trash"></i> Hapus</a>' .
+                                    '<a href="'.route('admin.class.delete', [$request->segment(3), $classroom->id]).'" class="btn btn-sm btn-danger" onclick="return confirm(`Hapus Kelas?`)"> <i class="bi bi-trash"></i> Hapus</a>' .
                                     '
                                     <div class="modal fade" id="edit-'.$classroom->id.'" tabindex="-1" role="dialog" aria-labelledby="add" aria-hidden="true">
                                     <div class="modal-dialog" role="document">
@@ -291,7 +296,7 @@ class DataController extends Controller
                                             '.csrf_field().'
                                             <div class="modal-content text-dark text-start">
                                                 <div class="modal-header">
-                                                    <h5 class="modal-title">Tambah Kelas</h5>
+                                                    <h5 class="modal-title">Edit Kelas</h5>
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                 </div>
                                                 <div class="modal-body">
@@ -322,7 +327,7 @@ class DataController extends Controller
                             $selected_genap = $year->status == 'Genap' ? 'selected' : '';
 
                             return  '<a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#edit-'.$year->id.'" class="btn btn-sm btn-primary me-2"><i class="bi bi-pencil-square"></i> Edit</a>' .
-                                '<a href="'.route('admin.year.delete', $year->id).'" class="btn btn-sm btn-danger" onclick="return confirm(`Hapus Tahun Akademik?`)" <i class="bi bi-trash"></i> Hapus</a>' .
+                                '<a href="'.route('admin.year.delete', $year->id).'" class="btn btn-sm btn-danger" onclick="return confirm(`Hapus Tahun Akademik?`)"> <i class="bi bi-trash"></i> Hapus</a>' .
                                 '
                                 <div class="modal fade" id="edit-'.$year->id.'" tabindex="-1" role="dialog" aria-labelledby="add" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
@@ -330,7 +335,7 @@ class DataController extends Controller
                                         '.csrf_field().'
                                         <div class="modal-content text-dark text-start">
                                             <div class="modal-header">
-                                                <h5 class="modal-title">Tambah Kelas</h5>
+                                                <h5 class="modal-title">Edit Tahun Akademik</h5>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body">
@@ -350,8 +355,8 @@ class DataController extends Controller
                                                     <label for="" class="mb-2">Semester</label>
                                                     <select name="semester" id="semester" class="form-control">
                                                         <option value="">Pilih Semester</option>
-                                                        <option value="Ganjil"'.$selected_ganjil.'>Semester Ganjil</option>
-                                                        <option value="Genap"'.$selected_genap.'>Semester Genap</option>
+                                                        <option value="Ganjil" '.$selected_ganjil.'>Semester Ganjil</option>
+                                                        <option value="Genap" '.$selected_genap.'>Semester Genap</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -407,6 +412,141 @@ class DataController extends Controller
                             return '<a href="'.route('admin.recruitment.detail', [$request->role, $user->user_id]).'" class="btn btn-sm btn-primary me-2"><i class="bi bi-pencil-square"></i></a>';
                         })
                         ->rawColumns(['photo', 'action', 'status'])
+                        ->make(true);
+    }
+
+    public function contribution(Request $request)
+    {
+        $year_id = $request->query('y') ?? MoreSetting::first()->year_id;
+        $data = ContributionItem::where('contribution_id', $request->id)->where('year_id', $year_id)->get();
+
+        return DataTables::of($data)
+                        ->addIndexColumn()
+                        ->addColumn('nominal', function($data){
+                            return 'Rp' . number_format($data->nominal,0,'.','.');
+                        })
+                        ->addColumn('created_at', function($data){
+                            return tanggal($data->created_at);
+                        })
+                        ->addColumn('action', function($data) use ($request){
+                            return  '<a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#edit-'.$data->id.'" class="btn btn-sm btn-primary me-2"><i class="bi bi-pencil-square"></i></a>' .
+                                '<a href="'.route('admin.contribution.delete', $data->id).'" class="btn btn-sm btn-danger me-2" onclick="return confirm(`Hapus Data?`)"> <i class="bi bi-trash"></i></a>' .
+                                '<a href="'.route('admin.contribution.payment', $data->id).'" class="btn btn-sm btn-success"> <i class="bi bi-wallet"></i></a>' .
+                                '
+                                <div class="modal fade" id="edit-'.$data->id.'" tabindex="-1" role="dialog" aria-labelledby="add" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <form method="post" action="'.route('admin.contribution.edit', [$request->segment(3), $data->id]).'">
+                                        '.csrf_field().'
+                                        <div class="modal-content text-dark text-start">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">Edit Data</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="form-group mb-3">
+                                                    <label class="text-dark mb-2">Nama</label>
+                                                    <input type="text" class="form-control" value="'.$data->name.'" name="name" placeholder="Masukan nama" required/>
+                                                </div>
+                                                <div class="form-group mb-3">
+                                                    <label class="text-dark mb-2">Keterangan</label>
+                                                    <input type="text" class="form-control" value="'.$data->description.'" name="description" placeholder="Masukan keterangan" required/>
+                                                </div>
+                                                <div class="form-group mb-3">
+                                                    <label class="text-dark mb-2">Nominal</label>
+                                                    <input type="text" class="form-control nominal" value="'.$data->nominal.'" name="nominal" placeholder="Masukan nominal" required/>
+                                                </div>
+                                                <div class="form-group mb-3">
+                                                    <label class="text-dark mb-2">Dibuat pada tanggal</label>
+                                                    <input type="date" class="form-control" value="'.date('Y-m-d', strtotime($data->created_at)).'" name="created_at" required/>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                                                <button type="submit" class="btn btn-primary">Simpan</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                                ';
+                        })
+                        ->make(true);
+    }
+
+    public function contribution_payment(Request $request)
+    {
+        $data = StudentPaymentContribution::where('contribution_item_id', $request->id)->get();
+
+        return DataTables::of($data)
+                        ->addIndexColumn()
+                        ->addColumn('nominal', function($data){
+                            return 'Rp' . number_format($data->nominal,0,'.','.');
+                        })
+                        ->addColumn('photo', function($data){
+                            return '<div class="photo"><img src="'.$data->student->photo.'" alt="Photo"></div>';
+                        })
+                        ->addColumn('name', function($data){
+                            return $data->student->name;
+                        })
+                        ->addColumn('created_at', function($data){
+                            return tanggal($data->created_at);
+                        })
+                        ->addColumn('action', function($data) use ($request){
+                            return  '<a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#edit-'.$data->id.'" class="btn btn-sm btn-primary me-2"><i class="bi bi-pencil-square"></i></a>' .
+                                '<a href="'.route('admin.contribution.payment.delete', $data->id).'" class="btn btn-sm btn-danger me-2" onclick="return confirm(`Hapus Data?`)"> <i class="bi bi-trash"></i></a>' .
+                                '
+                                <div class="modal fade" id="edit-'.$data->id.'" tabindex="-1" role="dialog" aria-labelledby="add" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <form method="post" action="'.route('admin.contribution.payment.edit', [$data->id]).'">
+                                        '.csrf_field().'
+                                        <div class="modal-content text-dark text-start">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">Edit Data</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="form-group mb-3">
+                                                    <label class="text-dark mb-2">Nominal</label>
+                                                    <input type="text" class="form-control nominal" value="'.$data->nominal.'" name="nominal" placeholder="Masukan nominal" required/>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="text-dark mb-2">Nominal</label>
+                                                    <input type="date" class="form-control nominal" value="'.date('Y-m-d', strtotime($data->created_at)).'" name="created_at" placeholder="Masukan nominal" required/>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                                                <button type="submit" class="btn btn-primary">Simpan</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                                ';
+                        })
+                        ->rawColumns(['photo', 'action'])
+                        ->make(true);
+    }
+
+    public function users_active(Request $request)
+    {
+        $users = Student::where('status_id', get_status('active'))->where('nisn', 'LIKE', '%'.$request->query('nisn').'%')->get();
+        return response()->json($users);
+    }
+
+    public function slides(Request $request)
+    {
+        $slides = Slide::where('unit_id', $this->unit_id)->get();
+        return DataTables::of($slides)
+                        ->addIndexColumn()
+                        ->addColumn('photo', function($slides){
+                            return "<img src='{$slides->image}' alt='image' width='200px'/>";
+                        })
+                        ->addColumn('action', function($slides){
+                            return  '<a href="'.route('admin.website.slide.edit', $slides->id).'" class="btn btn-sm btn-primary me-2"><i class="bi bi-pencil-square"></i></a>' .
+                                    '<a href="'.route('admin.website.slide.delete', $slides->id).'" class="btn btn-sm btn-danger me-2" onclick="return confirm(`Hapus Data?`)"> <i class="bi bi-trash"></i></a>';
+                        })
+                        ->rawColumns(['photo', 'action'])
                         ->make(true);
     }
 }

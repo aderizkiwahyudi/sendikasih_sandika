@@ -135,7 +135,7 @@
         <h5>ORANG TUA</h5>
         <div class="form-group row align-items-center mb-4">
             <div class="col-md-4">Nama & Pekerjaan Ayah <small class="text-danger">*</small></div>
-            <div class="col-md-4"><input type="text" name="father_name" id="father_name" value="{{ old('father_name', $user->father_job  ?? '') }}" placeholder="Masukan nama ayah " class="form-control"></div>
+            <div class="col-md-4"><input type="text" name="father_name" id="father_name" value="{{ old('father_name', $user->father_name  ?? '') }}" placeholder="Masukan nama ayah " class="form-control"></div>
             <div class="col-md-4"><input type="text" name="father_job" id="father_job" value="{{ old('father_job', $user->father_job  ?? '') }}" placeholder="Masukan pekerjaan ayah " class="form-control"></div>
         </div>
         <div class="form-group row align-items-center mb-4">
