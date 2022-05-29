@@ -12,12 +12,12 @@
                 <div class="row">
                     <div class="col-md-6">
                         @if ($errors->any())
-                            <div class="alert alert-warning alert-dismissible fade show mb-3" role="alert">
+                            <div class="alert alert-danger alert-dismissible fade show mb-3" role="alert">
                                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                                 Terdapat Kesalahan :
                                 <ul>
                                     @foreach ($errors->all() as $error)
-                                        <li>{{ $item }}</li>
+                                        <li>{{ $error }}</li>
                                     @endforeach
                                 </ul>
                             </div>

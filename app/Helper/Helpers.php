@@ -49,6 +49,12 @@ function unit_name($id)
     return ucwords($unit->name ?? '');
 }
 
+function unit($id)
+{
+    $unit = Unit::where('id', $id)->first();
+    return strtolower(str_replace(' ','',substr($unit->name,0,3)) ?? '');
+}
+
 function get_role($id)
 {
     $eng = ['admin' => 'admin','siswa' => 'student', 'guru' => 'teacher', 'staff' => 'staff'];

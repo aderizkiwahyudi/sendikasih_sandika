@@ -13,20 +13,22 @@
             <x-app-admin-navigation></x-app-admin-navigation>
             
             <div class="content">
-                <ul class="nav nav-pills mb-3">
-                    <li class="nav-item">
-                        <a class="nav-link {{Request::segment(4) == 'semua' ? 'active' : ''}}" href="{{ route('admin.users.academic', [Request::segment(3), 'semua']) }}">Semua</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link {{Request::segment(4) == 'mi' ? 'active' : ''}}" href="{{ route('admin.users.academic', [Request::segment(3), 'mi']) }}">MI</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link {{Request::segment(4) == 'smp' ? 'active' : ''}}" href="{{ route('admin.users.academic', [Request::segment(3), 'smp']) }}">SMP</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link {{Request::segment(4) == 'sma' ? 'active' : ''}}" href="{{ route('admin.users.academic', [Request::segment(3), 'sma']) }}">SMA</a>
-                    </li>
-                </ul>
+                @if (auth('admin')->user()->unit_id == 1)
+                    <ul class="nav nav-pills mb-3">
+                        <li class="nav-item">
+                            <a class="nav-link {{Request::segment(4) == 'semua' ? 'active' : ''}}" href="{{ route('admin.users.academic', [Request::segment(3), 'semua']) }}">Semua</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {{Request::segment(4) == 'mi' ? 'active' : ''}}" href="{{ route('admin.users.academic', [Request::segment(3), 'mi']) }}">MI</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {{Request::segment(4) == 'smp' ? 'active' : ''}}" href="{{ route('admin.users.academic', [Request::segment(3), 'smp']) }}">SMP</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {{Request::segment(4) == 'sma' ? 'active' : ''}}" href="{{ route('admin.users.academic', [Request::segment(3), 'sma']) }}">SMA</a>
+                        </li>
+                    </ul>
+                @endif
                 <div class="card-header d-flex align-items-center justify-content-between">
                     <h4>DAFTAR {{strtoupper(Request::segment(3))}}</h4>
                     <div>
@@ -43,6 +45,7 @@
                                 <th>Nama</th>
                                 <th>Status</th>
                                 <th>Unit</th>
+                                <th>Kelas</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -68,6 +71,7 @@
                         { data: 'name', name: 'name' },
                         { data: 'status', name: 'status' },
                         { data: 'unit', name: 'unit' },
+                        { data: 'class', name: 'class' },
                         { data: 'action', name: 'action', orderable: false, searchable: false }
                     ],
                     columnDefs: [

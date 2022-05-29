@@ -1,4 +1,4 @@
-<x-app-layout>
+<x-app-layout title="{{ ucwords(str_replace('-', '', Request::segment(2))) }}">
     <x-app-header></x-app-header>
     <section class="breadcrumb">
         <div class="container">
@@ -8,7 +8,7 @@
             </h4>
             <nav class="breadcrumb">
                 <a class="breadcrumb-item" href="/">Home</a>
-                {{ Request::segment(2) ? '<a class="breadcrumb-item" href="/">' . ucwords(str_replace('-', ' ', Request::segment(2))) . '</a>' : '' }}
+                {!! Request::segment(2) ? '<a class="breadcrumb-item" href="/">' . ucwords(str_replace('-', ' ', Request::segment(2))) . '</a>' : '' !!}
                 <span class="breadcrumb-item active" href="{{ url('berita') }}">{{ ucwords(str_replace('-', ' ', Request::segment(1))) }}</span>
             </nav>
         </div>

@@ -66,7 +66,7 @@
                                     <div class="p-3">
                                         <select name="category" id="caategory" class="form-control">
                                             <option value="1">Pilih Kategori</option>
-                                            @foreach ($categories as $category)
+                                            @foreach ($categories->filter(function($item){ return $item->unit_id == auth('admin')->user()->unit_id; }) as $category)
                                                 @if ($category->name != 'Berita')
                                                     <option value="{{ $category->id }}" {{ old('category', $news->category_id ?? '') == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
                                                 @endif

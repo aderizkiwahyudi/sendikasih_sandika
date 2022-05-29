@@ -1,4 +1,4 @@
-<x-app-layout>
+<x-app-layout title="{{ ucwords(str_replace('-', ' ', Request::segment(2))) }}">
     
     <x-app-header></x-app-header>
     

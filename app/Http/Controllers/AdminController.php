@@ -36,7 +36,10 @@ class AdminController extends Controller
     private $unit_id;
     public function __construct()
     {
-        $this->unit_id = 1;   
+        $this->middleware(function ($request, $next) {
+            $this->unit_id =  auth('admin')->user()->unit_id;
+            return $next($request);
+        });
     }
 
     public function index()
@@ -101,11 +104,7 @@ class AdminController extends Controller
             return back()->withErrors($validation->errors())->withInput($request->all());
         }
 
-        if($request->category <= 4){
-            $show = 0;
-        }else{
-            $show = 1;
-        }
+        $show = Category::where('id', $request->category)->first()->news ?? 1;
 
         if($request->segment(3) == 'tambah'){
 
@@ -189,7 +188,7 @@ class AdminController extends Controller
             return view('admin.dashboard.structure.index');
         }
 
-        $page = Page::where('slug', $request->slug)->firstOrFail();
+        $page = Page::where('slug', $request->slug)->where('unit_id', $this->unit_id)->firstOrFail();
         return view('admin.dashboard.page.index', compact('page'));
     }
     public function pages_prosess(Request $request)
@@ -198,7 +197,7 @@ class AdminController extends Controller
             return back()->withErrors('Judul tidak boleh kosong');
         }
 
-        $page = Page::where('slug', $request->slug)->update([
+        $page = Page::where('slug', $request->slug)->where('unit_id', $this->unit_id)->update([
             'title' => $request->title,
             'content' => $request->content,
         ]);
@@ -581,10 +580,8 @@ class AdminController extends Controller
                 $student['photo'] = file_upload($photo);
             }
     
-            if($unit_id > 2){
-                if($file = $request->file('ijazah')){
-                    $student['ijazah'] = file_upload($file);
-                }
+            if($file = $request->file('ijazah')){
+                $student['ijazah'] = file_upload($file);
             }
 
             #Tahun Ajaran
@@ -619,11 +616,9 @@ class AdminController extends Controller
             $account['email'] = $request->email;
             if($request->password) $account['password'] = bcrypt($request->password);
     
-            if($unit_id > 2){
-                $student['nisn'] = $request->nisn;
-                $student['previous_school'] = $request->previous_school;
-                $student['previous_school_address'] = $request->previous_school_address;
-            }
+            $student['nisn'] = $request->nisn ?? '';
+            $student['previous_school'] = $request->previous_school ?? '-';
+            $student['previous_school_address'] = $request->previous_school_address ?? '-';
             
             if($request->segment(5) == 'add'){
                 $student['created_at'] = date('Y-m-d H:i:s');
@@ -826,13 +821,16 @@ class AdminController extends Controller
         if($request->segment(5) == 'add'){
             return redirect(route('admin.users.academic', [$request->role, $request->unit]));
         }else{
-            return redirect(route('admin.users.academic.detail', [$request->role, $request->id]));
+            return redirect(route('admin.users.academic.detail', [$request->role, $request->id, 'biodata']));
         }
     }
     public function users_academic_detail(Request $request)
     {
-        $user = Student::where('user_id', $request->id) ?? Teacher::where('user_id', $request->id) ?? Staff::where('user_id', $request->id);
-        $user = $user->firstOrFail();
+        $user = Student::where('user_id', $request->id)->first() ?? Teacher::where('user_id', $request->id)->first() ?? Staff::where('user_id', $request->id)->first();
+
+        if(!$user){
+            return abort(404);
+        }
 
         $class = Classroom::all();
         $year = Year::where('id', '>', 1)->groupBy('name')->get();
@@ -927,7 +925,7 @@ class AdminController extends Controller
     public function classroom_proses(Request $request)
     {
         if(!$request->name) return back()->withErrors('Nama Kelas tidak boleh kosong');
-        if(Classroom::where('name', $request->name)->first()) return back()->withErrors('Kelas sudah ada, silakan coba lagi');
+        if(Classroom::where('name', $request->name)->where('unit_id', unit_name('mi'))->first()) return back()->withErrors('Kelas sudah ada, silakan coba lagi');
 
         if($request->segment(4) == 'add'){
             $classroom = new Classroom();
@@ -976,11 +974,22 @@ class AdminController extends Controller
         $request->name = $request->year_1 . '/' . $request->year_2;
 
         if($request->segment(3) == 'add'){
+            $check = Year::where('name', $request->name)->where('status', $request->semester)->first();
+            if($check){
+                return back()->withErrors('Tahun akademik sudah ada');
+            }
+
             $year = new Year();
             $year->name = $request->name;
             $year->status = $request->semester;
             $year->save();
         }else{
+
+            $check = Year::where('name', $request->name)->where('status', $request->semester)->where('id', '!=', $request->id)->first();
+            if($check){
+                return back()->withErrors('Tahun akademik sudah ada');
+            }
+
             $year = Year::where('id', $request->id)->update([
                 'name' => $request->name,
                 'status' => $request->semester,
@@ -1301,6 +1310,70 @@ class AdminController extends Controller
     public function website_slide_delete(Request $request)
     {
         Slide::where('id', $request->id)->delete();
+        return back();
+    }
+
+    public function admin()
+    {
+        return view('admin.dashboard.users.index');
+    }
+
+    public function admin_process(Request $request)
+    {
+        $rules = [
+            'username' => 'required|unique:users',
+            'email' => 'required|email|unique:users',
+            'unit_id' => 'required',
+        ];
+
+        $message = [
+            'username.required' => 'Username tidak boleh kosong',
+            'username.unique' => 'Username telah terdaftar',
+            'email.required' => 'Email tidak boleh kosong',
+            'email.email' => 'Masukan email dengan benar',
+            'email.unique' => 'Email telah terdaftar',
+            'password.required' => 'Masukan password dengan benar',
+            'unit_id.required' => 'Unit tidak boleh kosong',
+        ];
+
+        if(!$request->id){
+            $rules['password'] = 'required';
+        }else{
+            $rules['username'] = 'required|unique:users,username,' . $request->id;
+            $rules['email'] = 'required|email|unique:users,email,' . $request->id;
+        }
+
+        $validation = Validator::make($request->all(), $rules, $message);
+
+        if($validation->fails()){
+            return back()->withErrors($validation->errors());
+        }
+
+        if(!$request->id){
+            $user = new User();
+            $user->id = rand(999999,999999999);
+            $user->role_id = 1;
+            $user->unit_id = $request->unit_id;
+            $user->username = $request->username;
+            $user->email = $request->email;
+            $user->password = bcrypt($request->password);
+            $user->save();
+        }else{
+            $data['unit_id'] = $request->unit_id;
+            $data['username'] = $request->username;
+            $data['email'] = $request->email;
+            if($request->password) $data['password'] = bcrypt($request->password);
+
+            User::where('id', $request->id)->update($data);
+        }
+
+        Session::flash('success', 'Berhasil menambahkan admin');
+        return back();
+    }
+
+    public function admin_delete(Request $request)
+    {
+        User::where('role_id', 1)->where('id', $request->id)->delete();
         return back();
     }
 

@@ -42,15 +42,12 @@
                             <div class="dropdown-profile">
                                 <div class="photo-user"><i class="bi bi-person-circle"></i></div>
                                 <div class="name">
-                                    <p class="m-0">
-                                        {{ Auth::guard('admin')->user()->teacher->name ?? Auth::guard('admin')->user()->staff->name ?? 'Admin Master' }}
-                                    </p>
                                     <small>{{ '@' . Auth::guard('admin')->user()->username }}</small>
                                 </div>
                             </div>
-                            <div class="drowdown-profile-footer border-top d-flex align-items-center justify-content-between">
-                                <a class="dropdown-item" href="{{ route('admin.setting') }}">Pengaturan</a>
-                                <a class="dropdown-item text-danger" href="{{ route('admin.logout') }}">Keluar</a>
+                            <div class="drowdown-profile-footer border-top d-flex align-items-center justify-content-between text-center">
+                                <a class="dropdown-item" href="{{ route('admin.setting') }}"><i class="bi bi-gear"></i></a>
+                                <a class="dropdown-item text-danger" href="{{ route('admin.logout') }}"><i class="bi bi-box-arrow-in-right"></i></a>
                             </div>
                         </li>
                     </ul>

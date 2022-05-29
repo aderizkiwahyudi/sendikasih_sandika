@@ -27,12 +27,15 @@ class DataController extends Controller
     private $unit_id;
     public function __construct()
     {
-        $this->unit_id = 1;
+        $this->middleware(function ($request, $next) {
+            $this->unit_id =  auth('admin')->user()->unit_id;
+            return $next($request);
+        });
     }
 
     public function category()
     {
-        $categories = Category::where('unit_id', $this->unit_id)->where('id', '>', 4)->latest()->get();
+        $categories = Category::where('unit_id', $this->unit_id)->where('news', 1)->latest()->get();
         return DataTables::of($categories)
                         ->addIndexColumn()
                         ->addColumn('action', function($categories){
@@ -44,7 +47,7 @@ class DataController extends Controller
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
                                         <form method="post" action="'. route('admin.category.edit.prosess', $categories->id) .'">
-                                            <input disabled type="hidden" name="_token" value="'. csrf_token() .'"/>
+                                            <input type="hidden" name="_token" value="'. csrf_token() .'"/>
                                             <div class="modal-header">
                                                 <h5 class="modal-title">Edit Kategori</h5>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -100,7 +103,7 @@ class DataController extends Controller
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content text-start">
                                     <form method="post" action="'. route('admin.pages.file.edit', [$request->slug, $files->id]) .'" enctype="multipart/form-data">
-                                        <input disabled type="hidden" name="_token" value="'. csrf_token() .'"/>
+                                        <input type="hidden" name="_token" value="'. csrf_token() .'"/>
                                         <div class="modal-header">
                                             <h5 class="modal-title">Edit Data</h5>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -156,7 +159,7 @@ class DataController extends Controller
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content text-start">
                                     <form method="post" action="'. route('admin.structures.edit', $structures->id) .'" enctype="multipart/form-data">
-                                        <input disabled type="hidden" name="_token" value="'. csrf_token() .'"/>
+                                        <input type="hidden" name="_token" value="'. csrf_token() .'"/>
                                         <div class="modal-header">
                                             <h5 class="modal-title">Edit Data</h5>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -164,7 +167,7 @@ class DataController extends Controller
                                         <div class="modal-body">
                                             <div class="form-group mb-3">
                                                 <label class="text-dark mb-2">Nama</label>
-                                                <input disabled type="text" class="form-control" name="name" value="'. $structures->name .'" placeholder="Masukan nama struktur" required/>
+                                                <input type="text" class="form-control" name="name" value="'. $structures->name .'" placeholder="Masukan nama struktur" required/>
                                             </div>
                                         </div>
                                         <div class="modal-footer">
@@ -180,6 +183,7 @@ class DataController extends Controller
                         ->rawColumns(['name', 'action'])
                         ->make(true);
     }
+
     public function structures_item(Request $request)
     {
         $structure = UnitStructureItem::where('unit_name_structure_id', $request->id)->get();
@@ -196,7 +200,7 @@ class DataController extends Controller
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content text-start">
                                         <form method="post" action="'.route('admin.structures.item.edit', $structure->id).'" enctype="multipart/form-data">
-                                            <input disabled type="hidden" name="_token" value="'.csrf_token().'"/>
+                                            <input type="hidden" name="_token" value="'.csrf_token().'"/>
                                             <div class="modal-header">
                                                 <h5 class="modal-title">Edit Data</h5>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -204,7 +208,7 @@ class DataController extends Controller
                                             <div class="modal-body">
                                                 <div class="form-group mb-3">
                                                     <label class="text-dark mb-2">Nama</label>
-                                                    <input disabled type="text" class="form-control" name="name" value="'.$structure->name.'" placeholder="Masukan nama" required/>
+                                                    <input type="text" class="form-control" name="name" value="'.$structure->name.'" placeholder="Masukan nama" required/>
                                                 </div>
                                                 <div class="form-group mb-3">
                                                     <label class="text-dark mb-2">Keterangan</label>
@@ -212,7 +216,7 @@ class DataController extends Controller
                                                 </div>
                                                 <div class="form-group mb-3">
                                                     <label class="text-dark mb-2">Photo</label>
-                                                    <input disabled type="file" class="form-control mb-4" name="photo"/>
+                                                    <input type="file" class="form-control mb-4" name="photo"/>
                                                     <div class="photo" style="margin:0; width:100px; height:100px;"><img src="'.$structure->photo.'" alt="Photo"></div>
                                                 </div>
                                             </div>
@@ -271,6 +275,9 @@ class DataController extends Controller
                         ->addColumn('unit', function($users){
                             return ucwords(unit_name($users->account->unit_id));
                         })
+                        ->addColumn('class', function($users){
+                            return strtoupper($users->classroom->name ?? '-');
+                        })
                         ->addColumn('action', function($users) use ($request){
                             return '<a href="'.route('admin.users.academic.detail', [$request->segment(4) , $users->user_id, 'biodata']).'" class="btn btn-sm btn-primary me-2"><i class="bi bi-pencil-square"></i> Edit</a>';
                         })
@@ -302,7 +309,7 @@ class DataController extends Controller
                                                 <div class="modal-body">
                                                     <div class="form-group">
                                                         <label for="" class="mb-2">Nama Kelas</label>
-                                                        <input disabled type="text" name="name" value="'.$classroom->name.'" class="form-control" placeholder="Masukan Nama Kelas" required/>
+                                                        <input type="text" name="name" value="'.$classroom->name.'" class="form-control" placeholder="Masukan Nama Kelas" required/>
                                                     </div>
                                                 </div>
                                                 <div class="modal-footer">
@@ -343,11 +350,11 @@ class DataController extends Controller
                                                     <label for="" class="mb-2">Tahun</label>
                                                     <div class="row">
                                                         <div class="col-md-5">
-                                                            <input disabled type="text" name="year_1" value="'.$year_explode[0].'" class="form-control" placeholder="Masukan Tahun Akademik" maxlength="5" required/>
+                                                            <input type="text" name="year_1" value="'.$year_explode[0].'" class="form-control" placeholder="Masukan Tahun Akademik" maxlength="5" required/>
                                                         </div>
                                                         <div class="col-md-2 text-center">/</div>
                                                         <div class="col-md-5">
-                                                            <input disabled type="text" name="year_2" value="'.$year_explode[1].'" class="form-control" placeholder="Masukan Tahun Akademik" maxlength="5" required/>
+                                                            <input type="text" name="year_2" value="'.$year_explode[1].'" class="form-control" placeholder="Masukan Tahun Akademik" maxlength="5" required/>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -547,6 +554,69 @@ class DataController extends Controller
                                     '<a href="'.route('admin.website.slide.delete', $slides->id).'" class="btn btn-sm btn-danger me-2" onclick="return confirm(`Hapus Data?`)"> <i class="bi bi-trash"></i></a>';
                         })
                         ->rawColumns(['photo', 'action'])
+                        ->make(true);
+    }
+
+    public function admin()
+    {
+        $admin = User::where('role_id', 1)->where('unit_id', '>', 1)->get();
+        return DataTables::of($admin)
+                        ->addIndexColumn()
+                        ->addColumn('unit', function($admin){
+                            return unit_name($admin->unit_id) ?? '-';
+                        })
+                        ->addColumn('action', function($admin){
+                            $selected_mi = $admin->unit_id == 2 ? 'selected' : '';
+                            $selected_smp = $admin->unit_id == 3 ? 'selected' : '';
+                            $selected_sma = $admin->unit_id == 4 ? 'selected' : '';
+                            return 
+                            '<a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#edit-page-'. $admin->id .'" class="btn btn-sm btn-primary me-2"><i class="bi bi-pencil-square"></i> Edit</a>' .
+                            '<a href="'.route('admin.users.admin.delete', $admin->id).'" class="btn btn-sm btn-danger" onclick="return confirm(`Hapus Data?`)"> <i class="bi bi-trash"></i> Hapus</a>' .
+                            '
+                            <div class="modal fade text-dark" id="edit-page-'. $admin->id .'" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content text-start">
+                                <form method="post" action="'.route('admin.users.admin.edit', $admin->id).'">
+                                <input type="hidden" name="_token" value="'. csrf_token() .'"/>
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Edit Data</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="form-group mb-3">
+                                        <label class="text-dark mb-2">Username</label>
+                                        <input type="text" class="form-control" value="'.$admin->username.'" name="username" placeholder="Masukan username" required/>
+                                    </div>
+                                    <div class="form-group mb-3">
+                                        <label class="text-dark mb-2">Email</label>
+                                        <input type="email" class="form-control" value="'.$admin->email.'" name="email" placeholder="Masukan email" required/>
+                                    </div>
+                                    <div class="form-group mb-3">
+                                        <label class="text-dark mb-2">Password</label>
+                                        <input type="password" class="form-control" name="password" placeholder="********"/>
+                                        <small class="text-danger">Kosongkan password jika tidak ingin mengubah</small>                                    
+                                    </div>
+                                    <div class="form-group mb-3">
+                                        <label class="text-dark mb-2">Unit</label>
+                                        <select name="unit_id" id="" class="form-control">
+                                            <option value="">Pilih Unit</option>
+                                            <option value="2" '.$selected_mi.'>MI Sendikasih Sandika</option>
+                                            <option value="3" '.$selected_smp.'>SMP Sendikasih Sandika</option>
+                                            <option value="4" '.$selected_sma.'>SMA Sendikasih Sandika</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                                    <button type="submit" class="btn btn-primary">Simpan</button>
+                                </div>
+                            </form>
+                                </div>
+                            </div>
+                        </div>
+                            ';
+                        })
+                        ->rawColumns(['name', 'action'])
                         ->make(true);
     }
 }

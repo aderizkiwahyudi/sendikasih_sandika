@@ -17,7 +17,7 @@
         @endif
         <div class="form-group row align-items-center mb-4">
             <div class="col-md-3">Username <small class="text-danger">*</small></div>
-            <div class="col-md-5"><input type="text" name="username" value="{{ old('username', $user->account->username ?? '') }}" id="username" placeholder="Masukan nama" class="form-control"></div>
+            <div class="col-md-5 username"><input type="text" name="username" value="{{ old('username', $user->account->username ?? '') }}" id="username" placeholder="Masukan nama" class="form-control"></div>
         </div>
         <div class="form-group row align-items-center mb-4">
             <div class="col-md-3">Email <small class="text-danger">*</small></div>
@@ -81,7 +81,9 @@
             </div>
         </div>
     </div>
-    <div class="main-button">
-        <button type="submit" class="btn btn-primary">Simpan</button>
-    </div>
+    @if (Request::segment(5) != 'biodata')
+        <div class="main-button">
+            <button type="submit" class="btn btn-primary">Simpan</button>
+        </div>
+    @endif
 </form>

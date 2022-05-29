@@ -26,7 +26,7 @@ class pageController extends Controller
             $page = Page::where('unit_id', 1)->where('slug', $request->slug)->firstOrFail();
         }
 
-        $structures = UnitNameStructure::get();
+        $structures = UnitNameStructure::where('unit_id', 1)->get();
 
         return view('page', compact('page', 'items', 'structures'));
     }

@@ -17,7 +17,7 @@
         @endif
         <div class="form-group row align-items-center mb-4">
             <div class="col-md-4">Username <small class="text-danger">*</small></div>
-            <div class="col-md-4"><input type="text" name="username" value="{{ old('username', $user->account->username ?? '') }}" id="username" placeholder="Masukan nama" class="form-control"></div>
+            <div class="col-md-4 username"><input type="text" name="username" value="{{ old('username', $user->account->username ?? '') }}" id="username" placeholder="Masukan nama" class="form-control"></div>
         </div>
         <div class="form-group row align-items-center mb-4">
             <div class="col-md-4">Email <small class="text-danger">*</small></div>
@@ -39,12 +39,10 @@
             <div class="col-md-4"><input type="text" name="name" value="{{ old('name', $user->name ?? '') }}" id="name" placeholder="Masukan nama" class="form-control"></div>
         </div>
         
-        @if (Request::segment(4) != 'mi')
-            <div class="form-group row align-items-center mb-4">
-                <div class="col-md-4">NISN <small class="text-danger">*</small></div>
-                <div class="col-md-4"><input type="number" name="nisn" value="{{ old('nisn', $user->nisn ?? '') }}" id="nisn" placeholder="Masukan nisn" class="form-control"></div>
-            </div>
-        @endif
+        <div class="form-group row align-items-center mb-4">
+            <div class="col-md-4">NISN <small class="text-danger">*</small></div>
+            <div class="col-md-4"><input type="number" name="nisn" value="{{ old('nisn', $user->nisn ?? '') }}" id="nisn" placeholder="Masukan nisn" class="form-control"></div>
+        </div>
         <div class="form-group row align-items-center mb-4">
             <div class="col-md-4">Kelas<small class="text-danger">*</small></div>
             <div class="col-md-4">
@@ -69,8 +67,8 @@
             <div class="col-md-4">
                 <select name="semester" id="semester" class="form-control">
                     <option value="">Pilih Semester</option>
-                    <option value="ganjil" {{ old('semester', $user->year->status ?? '') == 'Ganjil' ? 'selected' : '' }}>Semester Ganjil</option>
-                    <option value="genap" {{ old('semester', $user->year->status ?? '') == 'Genap' ? 'selected' : '' }}>Semester Genap</option>
+                    <option value="ganjil" {{ old('semester', strtolower($user->year->status ?? '')) == 'ganjil' ? 'selected' : '' }}>Semester Ganjil</option>
+                    <option value="genap" {{ old('semester', strtolower($user->year->status ?? '')) == 'genap' ? 'selected' : '' }}>Semester Genap</option>
                     @if (Request::segment(5))
                         <option value="Tidak Diketahui" {{ old('semester', $user->year->status ?? '') == 'Tidak Diketahui' ? 'selected' : '' }}>Tidak Diketahui</option>
                     @endif
@@ -145,7 +143,7 @@
         </div>
         <div class="form-group row align-items-center mb-4">
             <div class="col-md-4">Alamat Orang Tua <small class="text-danger">*</small></div>
-            <div class="col-md-4"><textarea name="parents_address" id="parents_address" rows="5" placeholder="Masukan alamat asal sekolah " class="form-control">{{ old('parents_address', $user->parents_address ?? '') }}</textarea></div>
+            <div class="col-md-4"><textarea name="parents_address" id="parents_address" rows="5" placeholder="Masukan alamat orang tua " class="form-control">{{ old('parents_address', $user->parents_address ?? '') }}</textarea></div>
         </div>
         <div class="form-group row align-items-center mb-4">
             <div class="col-md-4">No. Handphone <small class="text-danger">*</small></div>

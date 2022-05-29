@@ -1,5 +1,5 @@
 <x-app-layout>
-    
+
     <div id="content-wrapper bg-white">
         
         <x-app-admin-aside></x-app-admin-aside>
@@ -70,11 +70,15 @@
 
         function drawChart() {
 
+            let siswaMI = {{ count($student->filter(function($item){ return $item->account->unit_id == 2; })) }}
+            let siswaSMP = {{ count($student->filter(function($item){ return $item->account->unit_id == 3; })) }}
+            let siswaSMA = {{ count($student->filter(function($item){ return $item->account->unit_id == 4; })) }}
+
             var data = google.visualization.arrayToDataTable([
             ['Unit', 'Jumlah Siswa'],
-            ['MI', 11],
-            ['SMP', 2],
-            ['SMA', 2],
+            ['MI', siswaMI],
+            ['SMP', siswaSMP],
+            ['SMA', siswaSMA],
             ]);
 
             var options = {

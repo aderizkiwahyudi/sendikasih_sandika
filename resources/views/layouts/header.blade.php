@@ -7,7 +7,7 @@
                     <img src="{{ asset('img/logo-white.png') }}" alt="Logo" width="110px"/>
                 </a>
             </div>
-            <a href="javascript:void(0)" class="bars"><i class="bi bi-list"></i></a>
+            <a href="javascript:void(0)" class="bars text-white"><i class="bi bi-list"></i></a>
             <div class="navigation">
                 <nav>
                     <ul>
@@ -31,9 +31,9 @@
                             <a href="javascript:void(0)">UNIT TUGAS</a>
                             <ul class="submenu">
                                 <li><a href="#">Tata Usaha</a></li>
-                                <li><a href="#">MI Sendikasih Sandika</a></li>
-                                <li><a href="#">MTS Sendikasih Sandika</a></li>
-                                <li><a href="#">SMA Sendikasih Sandika</a></li>
+                                <li><a href="https://mi.yayasansendikasihsandika.or.id/">MI Sendikasih Sandika</a></li>
+                                <li><a href="https://smp.yayasansendikasihsandika.or.id/">MTS Sendikasih Sandika</a></li>
+                                <li><a href="https://sma.yayasansendikasihsandika.or.id/">SMA Sendikasih Sandika</a></li>
                             </ul>
                         </li>
                         <li>
@@ -90,13 +90,19 @@
         }, 350);
     })
 
+    headerFixed($(window).scrollTop());
+
     $(window).scroll(function(){
         let scroll = $(this).scrollTop();
+        headerFixed(scroll);
+    });
+
+    function headerFixed(scroll){
         if(scroll > 100){
             $('header').addClass('header-fixed header-fixed-remove');
         }else if(scroll < 100){
             $('header').removeClass('header-fixed');
         }
-    });
+    }
 </script>
 @endpush

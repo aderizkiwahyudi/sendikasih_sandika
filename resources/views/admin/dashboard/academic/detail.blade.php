@@ -86,7 +86,10 @@
                                             display: none;
                                         }
                                         .main-form {
-                                            text-transform: capitalize;
+                                            text-transform: uppercase;
+                                        }
+                                        .main-form .username {
+                                            text-transform: lowercase;
                                         }
                                     </style>
                                 @endpush

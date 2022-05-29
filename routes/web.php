@@ -168,7 +168,10 @@ Route::prefix('administrator')->group(function(){
         Route::post('biaya/{id}/{item_id}', [AdminController::class, 'contribution_prosess'])->name('admin.contribution.edit');
         Route::get('biaya/{id}/delete', [AdminController::class, 'contribution_delete'])->name('admin.contribution.delete');
 
-        // Route::get('pembayaran', [AdminController::class, 'payment_contribution'])->name('admin.payment');
+        Route::get('admin', [AdminController::class, 'admin'])->name('admin.users.admin');
+        Route::post('admin', [AdminController::class, 'admin_process'])->name('admin.users.admin.add');
+        Route::post('admin/{id}', [AdminController::class, 'admin_process'])->name('admin.users.admin.edit');
+        Route::get('admin/delete/{id}', [AdminController::class, 'admin_delete'])->name('admin.users.admin.delete');
 
         Route::get('website/setting', [AdminController::class, 'website_setting'])->name('admin.website.setting');
         Route::post('website/setting', [AdminController::class, 'website_setting_prosess'])->name('admin.website.setting.proses');
@@ -203,6 +206,7 @@ Route::prefix('administrator')->group(function(){
         Route::get('data/user_search/active', [DataController::class, 'users_active'])->name('admin.users.search.active.data');
 
         Route::get('data/slides', [DataController::class, 'slides'])->name('admin.slides');
+        Route::get('data/users', [DataController::class, 'admin'])->name('admin.users.data');
 
         #CKEDITOR
         Route::post('ckeditor/upload/image', Ckeditor::class);

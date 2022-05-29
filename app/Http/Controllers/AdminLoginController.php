@@ -21,7 +21,7 @@ class AdminLoginController extends Controller
     }
     public function prosess(Request $request)
     {
-        $user = User::where('role_id', 1)->where('username', $request->username)->orWhere('email', $request->username)->first();
+        $user = User::where('username', $request->username)->orWhere('email', $request->username)->where('role_id', 1)->first();
         if(!$user){
             Session::flash('failed', 'Username atau email tidak ditemukan');
             return back();
